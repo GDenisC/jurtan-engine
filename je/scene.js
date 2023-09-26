@@ -1,0 +1,12 @@
+import { Instance } from "./instance.js";
+/**
+ * A scene is a collection of instances
+ * Scene always is a child of Canvas
+ */
+export class Scene extends Instance {
+    constructor() {
+        super();
+        this.canvas.addChild(this);
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2NlbmUuanMiLCJzb3VyY2VSb290IjoiamUtc3JjLyIsInNvdXJjZXMiOlsic2NlbmUudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLFFBQVEsRUFBRSxNQUFNLGVBQWUsQ0FBQztBQUV6Qzs7O0dBR0c7QUFDSCxNQUFNLE9BQU8sS0FBTSxTQUFRLFFBQVE7SUFDL0I7UUFDSSxLQUFLLEVBQUUsQ0FBQztRQUNSLElBQUksQ0FBQyxNQUFNLENBQUMsUUFBUSxDQUFDLElBQUksQ0FBQyxDQUFDO0lBQy9CLENBQUM7Q0FDSiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEluc3RhbmNlIH0gZnJvbSBcIi4vaW5zdGFuY2UuanNcIjtcclxuXHJcbi8qKlxyXG4gKiBBIHNjZW5lIGlzIGEgY29sbGVjdGlvbiBvZiBpbnN0YW5jZXNcclxuICogU2NlbmUgYWx3YXlzIGlzIGEgY2hpbGQgb2YgQ2FudmFzXHJcbiAqL1xyXG5leHBvcnQgY2xhc3MgU2NlbmUgZXh0ZW5kcyBJbnN0YW5jZSB7XHJcbiAgICBjb25zdHJ1Y3RvcigpIHtcclxuICAgICAgICBzdXBlcigpO1xyXG4gICAgICAgIHRoaXMuY2FudmFzLmFkZENoaWxkKHRoaXMpO1xyXG4gICAgfVxyXG59Il19

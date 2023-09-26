@@ -1,0 +1,17 @@
+import { Instance } from "../instance.js";
+export class ButtonGroup extends Instance {
+    constructor() {
+        super();
+        this._disabled = false;
+    }
+    get disabled() {
+        return this._disabled;
+    }
+    set disabled(value) {
+        this._disabled = value;
+        for (const child of this.children) {
+            child.disabled = value;
+        }
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYnV0dG9uR3JvdXAuanMiLCJzb3VyY2VSb290IjoiamUtc3JjLyIsInNvdXJjZXMiOlsidWkvYnV0dG9uR3JvdXAudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsT0FBTyxFQUFFLFFBQVEsRUFBRSxNQUFNLGdCQUFnQixDQUFDO0FBRTFDLE1BQU0sT0FBTyxXQUFZLFNBQVEsUUFBUTtJQUdyQztRQUNJLEtBQUssRUFBRSxDQUFDO1FBSEYsY0FBUyxHQUFHLEtBQUssQ0FBQztJQUk1QixDQUFDO0lBRUQsSUFBSSxRQUFRO1FBQ1IsT0FBTyxJQUFJLENBQUMsU0FBUyxDQUFDO0lBQzFCLENBQUM7SUFFRCxJQUFJLFFBQVEsQ0FBQyxLQUFjO1FBQ3ZCLElBQUksQ0FBQyxTQUFTLEdBQUcsS0FBSyxDQUFDO1FBQ3ZCLEtBQUssTUFBTSxLQUFLLElBQUksSUFBSSxDQUFDLFFBQVEsRUFBRTtZQUM5QixLQUFhLENBQUMsUUFBUSxHQUFHLEtBQUssQ0FBQztTQUNuQztJQUNMLENBQUM7Q0FDSiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEluc3RhbmNlIH0gZnJvbSBcIi4uL2luc3RhbmNlLmpzXCI7XHJcblxyXG5leHBvcnQgY2xhc3MgQnV0dG9uR3JvdXAgZXh0ZW5kcyBJbnN0YW5jZSB7XHJcbiAgICBwcm90ZWN0ZWQgX2Rpc2FibGVkID0gZmFsc2U7XHJcblxyXG4gICAgY29uc3RydWN0b3IoKSB7XHJcbiAgICAgICAgc3VwZXIoKTtcclxuICAgIH1cclxuXHJcbiAgICBnZXQgZGlzYWJsZWQoKSB7XHJcbiAgICAgICAgcmV0dXJuIHRoaXMuX2Rpc2FibGVkO1xyXG4gICAgfVxyXG5cclxuICAgIHNldCBkaXNhYmxlZCh2YWx1ZTogYm9vbGVhbikge1xyXG4gICAgICAgIHRoaXMuX2Rpc2FibGVkID0gdmFsdWU7XHJcbiAgICAgICAgZm9yIChjb25zdCBjaGlsZCBvZiB0aGlzLmNoaWxkcmVuKSB7XHJcbiAgICAgICAgICAgIChjaGlsZCBhcyBhbnkpLmRpc2FibGVkID0gdmFsdWU7XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG59Il19

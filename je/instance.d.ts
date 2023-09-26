@@ -1,0 +1,35 @@
+import { Point, Rect } from "./math.js";
+import { Canvas } from "./canvas.js";
+import { ChildrenArray } from "./childrenArray.js";
+export declare abstract class Instance extends ChildrenArray<Instance> {
+    private _canvas;
+    private firstUpdate;
+    index: number;
+    depth: number;
+    rotation: number;
+    x: number;
+    y: number;
+    constructor();
+    onCreate(): void;
+    onBegin(): void;
+    onDestroy(): void;
+    onUpdate(): void;
+    onDraw(): void;
+    _update(ctx: CanvasRenderingContext2D): void;
+    setColor(r: number, g: number, b: number, a?: number): void;
+    setFontAlign(align: CanvasTextAlign): void;
+    setFontBaseline(baseline: CanvasTextBaseline): void;
+    setFont(font: string): void;
+    drawRect(x: number, y: number, width: number, height: number, rounding?: number): void;
+    drawText(x: number, y: number, ...text: any[]): void;
+    drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number): void;
+    setAlpha(value?: number): void;
+    measureText(...text: any[]): TextMetrics;
+    destroy(cleanup?: boolean): void;
+    getRect(width: number, height: number): Rect;
+    isClassOf(...instancesClasses: FunctionConstructor[]): boolean;
+    get pos(): Point;
+    set pos(p: Point);
+    get canvas(): Canvas;
+    get ctx(): CanvasRenderingContext2D;
+}
