@@ -65,6 +65,6 @@ export default class MainMenu extends Scene {
         this.setFontAlign('center');
         this.setFontBaseline('top');
         this.setFont('48px Minecraft');
-        this.drawText(this.canvas.width / 2, 24, 'Minecraft 1D');
+        this.drawText(this.canvas.width / 2, 24, 'Minecraft');
     }
 }
