@@ -1,7 +1,6 @@
 import { Instance } from "./instance.js";
 import { images } from "./images.js";
 import { Point } from "./math.js";
-import { createColor, toCanvasColor } from "./colors.js";
 
 type CanvasOtherOptions = Partial<{
     render: 'pixelated' | 'crisp-edges',
