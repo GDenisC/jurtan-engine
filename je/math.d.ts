@@ -2,7 +2,7 @@ import { Instance } from "./instance.js";
 export declare class Point {
     x: number;
     y: number;
-    constructor(x: number, y: number);
+    constructor(x?: number, y?: number);
 }
 export declare class Rect extends Point {
     x: number;
@@ -32,4 +32,5 @@ export declare const GameMath: {
     readonly towards: (angle: number) => Point;
     readonly random: (min: number, max: number) => number;
     readonly sign: (x: number) => 0 | 1 | -1;
+    readonly lerp: (a: number, b: number, t: number) => number;
 };

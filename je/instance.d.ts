@@ -1,9 +1,13 @@
 import { Point, Rect } from "./math.js";
 import { Canvas } from "./canvas.js";
+import { Color } from "./colors.js";
 import { ChildrenArray } from "./childrenArray.js";
 export declare abstract class Instance extends ChildrenArray<Instance> {
     private _canvas;
     private firstUpdate;
+    private clipStroke;
+    protected _dontTranslate: boolean;
+    protected drawChildBottom: boolean;
     index: number;
     depth: number;
     rotation: number;
@@ -16,11 +20,20 @@ export declare abstract class Instance extends ChildrenArray<Instance> {
     onUpdate(): void;
     onDraw(): void;
     _update(ctx: CanvasRenderingContext2D): void;
-    setColor(r: number, g: number, b: number, a?: number): void;
     setFontAlign(align: CanvasTextAlign): void;
+    setFillColor(color: string): void;
+    setStrokeColor(color: string): void;
+    setColor(color: Color): void;
+    setColor(r: number, g: number, b: number, a?: number): void;
+    setColor(color: string): void;
     setFontBaseline(baseline: CanvasTextBaseline): void;
     setFont(font: string): void;
-    drawRect(x: number, y: number, width: number, height: number, rounding?: number): void;
+    fillRect(x: number, y: number, width: number, height: number): void;
+    fillCircle(x: number, y: number, radius: number): void;
+    private stroke;
+    strokeRect(x: number, y: number, width: number, height: number): void;
+    strokeCircle(x: number, y: number, radius: number): void;
+    setClipStroke(clipStroke: boolean): void;
     drawText(x: number, y: number, ...text: any[]): void;
     drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number): void;
     setAlpha(value?: number): void;
@@ -28,6 +41,7 @@ export declare abstract class Instance extends ChildrenArray<Instance> {
     destroy(cleanup?: boolean): void;
     getRect(width: number, height: number): Rect;
     isClassOf(...instancesClasses: FunctionConstructor[]): boolean;
+    addToCanvas(): void;
     get pos(): Point;
     set pos(p: Point);
     get canvas(): Canvas;

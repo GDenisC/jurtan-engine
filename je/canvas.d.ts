@@ -23,6 +23,7 @@ export declare class Canvas {
     ctx: CanvasRenderingContext2D;
     instances: Instance[];
     camera: Point;
+    backgroundColor: string;
     constructor(options?: CanvasOptions);
     private init;
     private resizeWindow;
