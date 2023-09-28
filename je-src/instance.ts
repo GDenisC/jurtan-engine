@@ -1,13 +1,16 @@
 import { Point, Rect } from "./math.js";
 import { Canvas, getCanvasInstance } from "./canvas.js";
-import { toCanvasColor } from "./colors.js";
+import { Color, createColor, toCanvasColor } from "./colors.js";
 import { ChildrenArray } from "./childrenArray.js";
 
 let _instanceId = 0;
 
 export abstract class Instance extends ChildrenArray<Instance> {
     private _canvas: Canvas | null = null;
-    private firstUpdate = false
+    private firstUpdate = false;
+    private clipStroke = false;
+    protected _dontTranslate = false;
+    protected drawChildBottom = true;
     index: number;
     depth = 0;
     rotation = 0;
@@ -31,22 +34,39 @@ export abstract class Instance extends ChildrenArray<Instance> {
     _update(ctx: CanvasRenderingContext2D) {
         ctx.save();
         this.onUpdate();
-        ctx.translate(this.x, this.y);
+        if (!this._dontTranslate) ctx.translate(this.x, this.y);
         if (!this.firstUpdate) {
             this.onBegin();
             this.firstUpdate = true;
         }
+        if (this.drawChildBottom) this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
         this.onDraw();
-        this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
+        if (!this.drawChildBottom) this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
         ctx.restore();
-    }
-
-    setColor(r: number, g: number, b: number, a?: number) {
-        this.ctx.fillStyle = toCanvasColor({ r, g, b, a });
     }
 
     setFontAlign(align: CanvasTextAlign) {
         this.ctx.textAlign = align;
+    }
+
+    setFillColor(color: string) {
+        this.ctx.fillStyle = color;
+    }
+
+    setStrokeColor(color: string) {
+        this.ctx.strokeStyle = color;
+    }
+
+    setColor(color: Color): void;
+    setColor(r: number, g: number, b: number, a?: number): void;
+    setColor(color: string): void;
+    setColor(arg1: Color | number | string, arg2?: number, arg3?: number, arg4?: number) {
+        if (typeof arg1 === 'object') this.setColor(toCanvasColor(arg1));
+        else if (typeof arg1 === 'string') {
+            this.setFillColor(arg1);
+            this.setStrokeColor(arg1);
+        }
+        else this.setColor(createColor(arg1, arg2 as number, arg3 as number, arg4 as number));
     }
 
     setFontBaseline(baseline: CanvasTextBaseline) {
@@ -57,15 +77,43 @@ export abstract class Instance extends ChildrenArray<Instance> {
         this.ctx.font = font;
     }
 
-    drawRect(x: number, y: number, width: number, height: number, rounding?: number) {
-        this.ctx.save();
-        if (!rounding) {
-            this.ctx.fillRect(x - width / 2, y - height / 2, width, height);
+    fillRect(x: number, y: number, width: number, height: number) {
+        this.ctx.fillRect(x - width / 2, y - height / 2, width, height);
+    }
+
+    fillCircle(x: number, y: number, radius: number) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        this.ctx.fill();
+    }
+
+    private stroke() {
+        if (this.clipStroke) {
+            this.ctx.save();
+            this.ctx.lineWidth *= 2;
+            this.ctx.clip();
+            this.ctx.stroke();
+            this.ctx.lineWidth /= 2;
+            this.ctx.restore();
         } else {
-            this.ctx.roundRect(x - width / 2, y - height / 2, width, height, rounding);
-            this.ctx.fill();
+            this.ctx.stroke();
         }
-        this.ctx.restore();
+    }
+
+    strokeRect(x: number, y: number, width: number, height: number) {
+        this.ctx.beginPath();
+        this.ctx.rect(x - width / 2, y - height / 2, width, height);
+        this.stroke();
+    }
+
+    strokeCircle(x: number, y: number, radius: number) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        this.stroke();
+    }
+
+    setClipStroke(clipStroke: boolean) {
+        this.clipStroke = clipStroke;
     }
 
     drawText(x: number, y: number, ...text: any[]) {
@@ -101,6 +149,10 @@ export abstract class Instance extends ChildrenArray<Instance> {
                 return true;
         }
         return false;
+    }
+
+    addToCanvas() {
+        this.canvas.addChild(this);
     }
 
     get pos() {

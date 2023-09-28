@@ -1,6 +1,7 @@
 import { Instance } from "./instance.js";
 import { images } from "./images.js";
 import { Point } from "./math.js";
+import { createColor, toCanvasColor } from "./colors.js";
 
 type CanvasOtherOptions = Partial<{
     render: 'pixelated' | 'crisp-edges',
@@ -35,6 +36,7 @@ export class Canvas {
     ctx: CanvasRenderingContext2D;
     instances: Instance[] = [];
     camera: Point;
+    backgroundColor = 'rgb(30, 30, 30)';
 
     constructor(options?: CanvasOptions) {
         if (!Canvas.instance) Canvas.instance = this;
@@ -109,7 +111,7 @@ export class Canvas {
 
     renderLoop() {
         const ctx = this.ctx;
-        ctx.fillStyle = 'rgb(30, 30, 30)';
+        ctx.fillStyle = this.backgroundColor;
         ctx.fillRect(0, 0, this.width * this.ratio, this.height * this.ratio);
         ctx.fillStyle = 'white';
 

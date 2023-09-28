@@ -51,7 +51,7 @@ export class Button extends Instance {
 
     onDraw() {
         this.setColor(this.color.r, this.color.g, this.color.b, this.color.a);
-        this.drawRect(this.x, this.y, this.width, this.height);
+        this.fillRect(this.x, this.y, this.width, this.height);
         this.setFont('24px Arial');
         this.setFontAlign('center');
         this.setFontBaseline('middle');

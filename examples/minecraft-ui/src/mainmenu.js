@@ -14,7 +14,7 @@ class TestButton extends Button {
         this.drawImage(this.image, 0, 0, this.width, this.height);
         if (this.hover) {
             this.setAlpha(0.2);
-            this.drawRect(0, 0, this.width, this.height);
+            this.fillRect(0, 0, this.width, this.height);
             this.setAlpha();
         }
     }

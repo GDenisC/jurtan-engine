@@ -5,7 +5,7 @@ import { ImageInstance } from "./images.js";
 import { Instance } from "./instance.js";
 
 export class Point {
-    constructor(public x: number, public y: number) {}
+    constructor(public x = 0, public y = 0) {}
 }
 
 export class Rect extends Point {
@@ -93,5 +93,6 @@ export const GameMath = {
 
     // other
     random: (min: number, max: number) => Math.random() * (max - min) + min,
-    sign: (x: number) => x > 0 ? 1 : x < 0 ? -1 : 0
+    sign: (x: number) => x > 0 ? 1 : x < 0 ? -1 : 0,
+    lerp: (a: number, b: number, t: number) => a * (1 - t) + b * t
 } as const;
