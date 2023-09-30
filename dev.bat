@@ -1,2 +1,3 @@
 @echo off
-npm run dev
+@rem If you using server try server.bat
+npm run dev -s

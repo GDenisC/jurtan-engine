@@ -7,7 +7,7 @@ export default {
     module: {
         rules: [
             {
-                test: /\.tsx?$/,
+                test: /\.ts$/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
             },
@@ -22,7 +22,7 @@ export default {
         extensions: ['.ts', '.js'],
     },
     output: {
-        filename: 'bundle.js',
+        filename: '[fullhash].js',
         path: path.resolve('dist'),
     },
     plugins: [
@@ -36,5 +36,10 @@ export default {
         compress: true,
         port: 3000,
         open: true
+    },
+    optimization: {
+        //concatenateModules: true,
+        //chunkIds: 'total-size',
+        //moduleIds: 'size'
     }
 }
