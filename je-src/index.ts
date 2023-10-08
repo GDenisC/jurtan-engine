@@ -6,7 +6,7 @@ export { GameMath, Point, Rect } from './math.js'
 export { Instance } from './instance.js';
 export { ImageInstance, Image9Instance } from './images.js'
 
-export { newColor, createColor, Color } from './colors.js';
+export { Color } from './colors.js';
 
 export { Keyboard } from './keyboard.js';
 
