@@ -85,6 +85,7 @@ export abstract class Instance extends ChildrenArray<Instance> {
         this.ctx.beginPath();
         this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
         this.ctx.fill();
+        this.ctx.closePath();
     }
 
     private stroke() {
