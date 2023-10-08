@@ -1,6 +1,6 @@
 import { Point, Rect } from "./math.js";
 import { Canvas, getCanvasInstance } from "./canvas.js";
-import { Color, createColor, toCanvasColor } from "./colors.js";
+import { Color } from "./colors.js";
 import { ChildrenArray } from "./childrenArray.js";
 
 let _instanceId = 0;
@@ -49,24 +49,38 @@ export abstract class Instance extends ChildrenArray<Instance> {
         this.ctx.textAlign = align;
     }
 
-    setFillColor(color: string) {
-        this.ctx.fillStyle = color;
+    fillColor(color: Color): void;
+    fillColor(r: number, g: number, b: number, a?: number): void;
+    fillColor(color: string): void;
+    fillColor(arg1: Color | number | string, arg2?: number, arg3?: number, arg4?: number) {
+        if (typeof arg1 === 'object') this.fillColor(Color.convert(arg1));
+        else if (typeof arg1 === 'string') {
+            this.ctx.fillStyle = arg1;
+        }
+        else this.fillColor(Color.create(arg1, arg2 as number, arg3 as number, arg4 as number));
     }
 
-    setStrokeColor(color: string) {
-        this.ctx.strokeStyle = color;
+    strokeColor(color: Color): void;
+    strokeColor(r: number, g: number, b: number, a?: number): void;
+    strokeColor(color: string): void;
+    strokeColor(arg1: Color | number | string, arg2?: number, arg3?: number, arg4?: number) {
+        if (typeof arg1 === 'object') this.strokeColor(Color.convert(arg1));
+        else if (typeof arg1 === 'string') {
+            this.ctx.strokeStyle = arg1;
+        }
+        else this.strokeColor(Color.create(arg1, arg2 as number, arg3 as number, arg4 as number));
     }
 
     setColor(color: Color): void;
     setColor(r: number, g: number, b: number, a?: number): void;
     setColor(color: string): void;
     setColor(arg1: Color | number | string, arg2?: number, arg3?: number, arg4?: number) {
-        if (typeof arg1 === 'object') this.setColor(toCanvasColor(arg1));
+        if (typeof arg1 === 'object') this.setColor(Color.convert(arg1));
         else if (typeof arg1 === 'string') {
-            this.setFillColor(arg1);
-            this.setStrokeColor(arg1);
+            this.ctx.fillStyle = arg1;
+            this.ctx.strokeStyle = arg1;
         }
-        else this.setColor(createColor(arg1, arg2 as number, arg3 as number, arg4 as number));
+        else this.setColor(Color.create(arg1, arg2 as number, arg3 as number, arg4 as number));
     }
 
     setFontBaseline(baseline: CanvasTextBaseline) {
