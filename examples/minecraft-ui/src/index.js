@@ -8,6 +8,8 @@ const cv = new Canvas({
     ratio: true
 });
 
+// WARN: MADE IN VERSION BETA v1.1.1
+
 new MainMenu();
 
 cv.start();
