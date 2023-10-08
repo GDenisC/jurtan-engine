@@ -1,12 +1,12 @@
 import { Collisions } from "../collisions.js";
-import { createColor } from "../colors.js";
+import { Color } from "../colors.js";
 import { Instance } from "../instance.js";
 import { Mouse } from "../mouse.js";
 
 export class Button extends Instance {
     hover = false;
     hold = false;
-    color = createColor(255, 255, 255);
+    color = Color.create(255, 255, 255);
     text = 'Button';
     disabled = false;
 
