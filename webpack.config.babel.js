@@ -1,6 +1,8 @@
 import path from 'path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 
+const bundle = true;
+
 export default {
     entry: './src/index.js',
     mode: 'development',
@@ -22,7 +24,7 @@ export default {
         extensions: ['.ts', '.js'],
     },
     output: {
-        filename: '[fullhash].js',
+        filename: bundle ? 'bundle.js' : '[fullhash].js',
         path: path.resolve('dist'),
     },
     plugins: [
