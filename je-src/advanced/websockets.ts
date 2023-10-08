@@ -2,6 +2,7 @@ import { EventEmitter } from "../eventEmitter.js";
 
 export class Socket<MessageType = Record<string | symbol, any>> extends EventEmitter {
     websocket: WebSocket | null = null;
+    parseJson = true;
 
     constructor(public url: string) {
         super();
@@ -10,7 +11,7 @@ export class Socket<MessageType = Record<string | symbol, any>> extends EventEmi
     connect() {
         this.websocket = new WebSocket(this.url);
         this.websocket.addEventListener('open', () => this.emit('open', this));
-        this.websocket.addEventListener('message', data => this.emit('message', data.data));
+        this.websocket.addEventListener('message', data => this.emit('message', this.parseJson ? JSON.parse(data.data) : data.data));
         this.websocket.addEventListener('close', () => this.emit('close'));
         this.websocket.addEventListener('error', error => this.emit('error', error));
     }
