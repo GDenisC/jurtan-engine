@@ -1,5 +1,4 @@
 import { Collisions } from "../collisions.js";
-import { createColor } from "../colors.js";
 import { Instance } from "../instance.js";
 import { Mouse } from "../mouse.js";
 export class Button extends Instance {
@@ -9,8 +8,6 @@ export class Button extends Instance {
         this.height = height;
         this.hover = false;
         this.hold = false;
-        this.color = createColor(255, 255, 255);
-        this.text = 'Button';
         this.disabled = false;
         this.x = x;
         this.y = y;
@@ -47,17 +44,6 @@ export class Button extends Instance {
                 this.hold = false;
             }
         }
-    }
-    onDraw() {
-        this.setColor(this.color.r, this.color.g, this.color.b, this.color.a);
-        this.fillRect(this.x, this.y, this.width, this.height);
-        this.setFont('24px Arial');
-        this.setFontAlign('center');
-        this.setFontBaseline('middle');
-        this.setColor(0, 0, 0);
-        this.drawText(this.x, this.y, this.text);
-        this.setFontAlign('left');
-        this.setFontBaseline('top');
     }
     get rect() {
         return this.getRect(this.width, this.height);

@@ -17,28 +17,23 @@ export const getCanvasInstance = () => {
 };
 export const getInstances = () => getCanvasInstance().instances;
 export class Canvas {
-    constructor(options) {
+    constructor(options = { width: 1366, height: 768 }) {
+        var _a, _b, _c;
         this.instances = [];
         this.backgroundColor = 'rgb(30, 30, 30)';
         if (!Canvas.instance)
             Canvas.instance = this;
         else
             throw new Error('Canvas instance already exists, use getCanvasInstance() instead of new Canvas().');
-        this.options = options || {
-            width: 1366,
-            height: 768
-        };
+        (_a = options.ratio) !== null && _a !== void 0 ? _a : (options.ratio = true);
+        (_b = options.smooth) !== null && _b !== void 0 ? _b : (options.smooth = false);
+        (_c = options.render) !== null && _c !== void 0 ? _c : (options.render = 'auto');
+        this.options = options;
         this.tag = document.getElementById('canvas');
         if (!this.tag)
             throw new Error('Canvas not found');
-        if (!this.options.fullscreen) {
-            this.tag.width = this.options.width * this.ratio;
-            this.tag.height = this.options.height * this.ratio;
-        }
-        else {
-            this.tag.width = 1920;
-            this.tag.height = 1280;
-        }
+        this.tag.width = this.options.width * this.ratio;
+        this.tag.height = this.options.height * this.ratio;
         this.ctx = this.tag.getContext('2d');
         if (!this.ctx)
             throw new Error('Canvas context not found');
@@ -46,27 +41,20 @@ export class Canvas {
         this.init();
     }
     init() {
-        var _a, _b;
         window.addEventListener('resize', () => this.resizeWindow());
         this.resizeWindow();
         this.tag.addEventListener('contextmenu', e => e.preventDefault());
-        this.tag.style.imageRendering = (_a = this.options.render) !== null && _a !== void 0 ? _a : 'auto';
-        this.ctx.imageSmoothingEnabled = (_b = this.options.smooth) !== null && _b !== void 0 ? _b : false;
+        this.tag.style.imageRendering = this.options.render;
+        this.ctx.imageSmoothingEnabled = this.options.smooth;
     }
     resizeWindow() {
         const { width, height } = this.realSize;
-        if (!this.options.fullscreen) {
-            this.tag.width = this.options.width * this.ratio;
-            this.tag.height = this.options.height * this.ratio;
-            this.tag.style.width = `${width}px`;
-            this.tag.style.height = `${height}px`;
-            this.tag.style.top = `${window.innerHeight / 2 - height / 2}px`;
-            this.tag.style.left = `${window.innerWidth / 2 - width / 2}px`;
-        }
-        else {
-            this.tag.style.width = `${window.innerWidth}px`;
-            this.tag.style.height = `${window.innerHeight}px`;
-        }
+        this.tag.width = this.options.width * this.ratio;
+        this.tag.height = this.options.height * this.ratio;
+        this.tag.style.width = `${width}px`;
+        this.tag.style.height = `${height}px`;
+        this.tag.style.top = `${window.innerHeight / 2 - height / 2}px`;
+        this.tag.style.left = `${window.innerWidth / 2 - width / 2}px`;
     }
     loadAllImages() {
         return new Promise(resolve => {
@@ -108,7 +96,7 @@ export class Canvas {
     start() {
         this.runAsync();
     }
-    addChild(instance) {
+    add(instance) {
         this.instances.push(instance);
     }
     get width() {
@@ -124,10 +112,7 @@ export class Canvas {
         };
     }
     get center() {
-        return {
-            x: this.width / 2,
-            y: this.height / 2
-        };
+        return new Point(this.width / 2, this.height / 2);
     }
     get ratio() {
         return this.options.ratio ? window.devicePixelRatio : 1;

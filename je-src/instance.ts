@@ -1,25 +1,28 @@
 import { Point, Rect } from "./math.js";
 import { Canvas, getCanvasInstance } from "./canvas.js";
-import { Color } from "./colors.js";
+import { AnyColor, Color } from "./colors.js";
 import { ChildrenArray } from "./childrenArray.js";
 
-let _instanceId = 0;
+let lastInstanceId = 0;
+let canvasInstance: Canvas | null = null;
+
+export interface Rectable {
+    get rect(): Rect;
+}
 
 export abstract class Instance extends ChildrenArray<Instance> {
-    private _canvas: Canvas | null = null;
     private firstUpdate = false;
-    private clipStroke = false;
-    protected _dontTranslate = false;
+    protected dontTranslate = false;
     protected drawChildBottom = true;
     index: number;
     depth = 0;
-    rotation = 0;
     x = 0;
     y = 0;
+    clipStroke = false;
 
     constructor() {
         super();
-        this.index = ++_instanceId;
+        this.index = ++lastInstanceId;
         this.onCreate();
     }
 
@@ -32,114 +35,132 @@ export abstract class Instance extends ChildrenArray<Instance> {
     onDraw() {}
 
     _update(ctx: CanvasRenderingContext2D) {
+        const updateChildren = () => this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
         ctx.save();
         this.onUpdate();
-        if (!this._dontTranslate) ctx.translate(this.x, this.y);
+        if (!this.dontTranslate) ctx.translate(this.x, this.y);
         if (!this.firstUpdate) {
             this.onBegin();
             this.firstUpdate = true;
         }
-        if (this.drawChildBottom) this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
+        if (this.drawChildBottom) updateChildren();
         this.onDraw();
-        if (!this.drawChildBottom) this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
+        if (!this.drawChildBottom) updateChildren();
         ctx.restore();
     }
 
-    setFontAlign(align: CanvasTextAlign) {
+    translate(x: number, y: number) {
+        this.ctx.translate(x, y);
+    }
+
+    save() {
+        this.ctx.save();
+    }
+
+    restore() {
+        this.ctx.restore();
+    }
+
+    get lineWidth() {
+        return this.ctx.lineWidth;
+    }
+
+    set lineWidth(w: number) {
+        this.ctx.lineWidth = w;
+    }
+
+    set fontAlign(align: CanvasTextAlign) {
         this.ctx.textAlign = align;
     }
 
-    fillColor(color: Color): void;
-    fillColor(r: number, g: number, b: number, a?: number): void;
-    fillColor(color: string): void;
-    fillColor(arg1: Color | number | string, arg2?: number, arg3?: number, arg4?: number) {
-        if (typeof arg1 === 'object') this.fillColor(Color.convert(arg1));
-        else if (typeof arg1 === 'string') {
-            this.ctx.fillStyle = arg1;
-        }
-        else this.fillColor(Color.create(arg1, arg2 as number, arg3 as number, arg4 as number));
+    private setColor(prop: 'fillStyle' | 'strokeStyle', c: AnyColor) {
+        this.ctx[prop] = typeof c == 'string' ? c : Array.isArray(c) ? Color.from(c[0], c[1], c[2], c[3]) : Color.convert(c);
     }
 
-    strokeColor(color: Color): void;
-    strokeColor(r: number, g: number, b: number, a?: number): void;
-    strokeColor(color: string): void;
-    strokeColor(arg1: Color | number | string, arg2?: number, arg3?: number, arg4?: number) {
-        if (typeof arg1 === 'object') this.strokeColor(Color.convert(arg1));
-        else if (typeof arg1 === 'string') {
-            this.ctx.strokeStyle = arg1;
-        }
-        else this.strokeColor(Color.create(arg1, arg2 as number, arg3 as number, arg4 as number));
+    set fillColor(c: AnyColor) {
+        this.setColor('fillStyle', c);
     }
 
-    setColor(color: Color): void;
-    setColor(r: number, g: number, b: number, a?: number): void;
-    setColor(color: string): void;
-    setColor(arg1: Color | number | string, arg2?: number, arg3?: number, arg4?: number) {
-        if (typeof arg1 === 'object') this.setColor(Color.convert(arg1));
-        else if (typeof arg1 === 'string') {
-            this.ctx.fillStyle = arg1;
-            this.ctx.strokeStyle = arg1;
-        }
-        else this.setColor(Color.create(arg1, arg2 as number, arg3 as number, arg4 as number));
+    set strokeColor(c: AnyColor) {
+        this.setColor('strokeStyle', c);
     }
 
-    setFontBaseline(baseline: CanvasTextBaseline) {
+    set fontBaseline(baseline: CanvasTextBaseline) {
         this.ctx.textBaseline = baseline;
     }
 
-    setFont(font: string) {
+    set font(font: string) {
         this.ctx.font = font;
     }
 
-    fillRect(x: number, y: number, width: number, height: number) {
-        this.ctx.fillRect(x - width / 2, y - height / 2, width, height);
-    }
-
-    fillCircle(x: number, y: number, radius: number) {
+    rectangle(x: number, y: number, width: number, height: number) {
         this.ctx.beginPath();
-        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        this.ctx.fill();
+        this.ctx.rect(x - width / 2, y - height / 2, width, height);
         this.ctx.closePath();
     }
 
-    private stroke() {
+    circle(x: number, y: number, radius: number) {
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        this.ctx.closePath();
+    }
+
+    path(vertexes: Point[], closePath = true) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(vertexes[0].x, vertexes[0].y);
+        for (let i = 1; i < vertexes.length; i++) {
+            this.ctx.lineTo(vertexes[i].x, vertexes[i].y);
+        }
+        if (closePath) this.ctx.closePath();
+    }
+
+    polygon(angles: number, { scale, rotation }: Partial<{ scale: number, rotation: number }>) {
+        scale ??= 1;
+        rotation ??= 0;
+        const theta = 2 * Math.PI / angles;
+        this.path(
+            Array.from({ length: angles }, (_, i) => new Point(
+                Math.cos(i * theta + (rotation as number) / 180 * Math.PI) * (scale as number),
+                Math.sin(i * theta + (rotation as number) / 180 * Math.PI) * (scale as number)
+            ))
+        );
+    }
+
+    fill() {
+        this.ctx.fill();
+    }
+
+    stroke() {
         if (this.clipStroke) {
-            this.ctx.save();
-            this.ctx.lineWidth *= 2;
-            this.ctx.clip();
-            this.ctx.stroke();
-            this.ctx.lineWidth /= 2;
-            this.ctx.restore();
+            this.save();
+            {
+                this.lineWidth *= 2;
+                this.ctx.clip();
+                this.ctx.stroke();
+                this.lineWidth /= 2;
+            }
+            this.restore();
         } else {
             this.ctx.stroke();
         }
     }
 
-    strokeRect(x: number, y: number, width: number, height: number) {
-        this.ctx.beginPath();
-        this.ctx.rect(x - width / 2, y - height / 2, width, height);
-        this.stroke();
-    }
-
-    strokeCircle(x: number, y: number, radius: number) {
-        this.ctx.beginPath();
-        this.ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        this.stroke();
-    }
-
-    setClipStroke(clipStroke: boolean) {
-        this.clipStroke = clipStroke;
-    }
-
-    drawText(x: number, y: number, ...text: any[]) {
+    fillText(x: number, y: number, ...text: any[]) {
         this.ctx.fillText(text.join(' '), x, y);
+    }
+
+    strokeText(x: number, y: number, ...text: any[]) {
+        this.ctx.strokeText(text.join(' '), x, y);
     }
 
     drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number) {
         this.ctx.drawImage(image, x - width / 2,  y - height / 2, width, height);
     }
 
-    setAlpha(value: number = 1) {
+    /**
+     * @param value Alpha value from 0 to 1 (decimal).
+     */
+    set alpha(value: number) {
         this.ctx.globalAlpha = value;
     }
 
@@ -166,8 +187,8 @@ export abstract class Instance extends ChildrenArray<Instance> {
         return false;
     }
 
-    addToCanvas() {
-        this.canvas.addChild(this);
+    addToMain() {
+        this.canvas.add(this);
     }
 
     get pos() {
@@ -181,8 +202,8 @@ export abstract class Instance extends ChildrenArray<Instance> {
     }
 
     get canvas() {
-        if (!this._canvas) this._canvas = getCanvasInstance();
-        return this._canvas;
+        if (!canvasInstance) canvasInstance = getCanvasInstance();
+        return canvasInstance;
     }
 
     get ctx() {

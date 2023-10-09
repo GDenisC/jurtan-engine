@@ -1,15 +1,24 @@
 import { Instance } from "./instance.js";
-export declare class Point {
+export interface Copyable<T> {
+    copy(): T;
+}
+export declare class Point implements Copyable<Point> {
     x: number;
     y: number;
     constructor(x?: number, y?: number);
+    copy(): Point;
+    static from(vec: {
+        x: number;
+        y: number;
+    }): Point;
 }
-export declare class Rect extends Point {
+export declare class Rect extends Point implements Copyable<Rect> {
     x: number;
     y: number;
     width: number;
     height: number;
     constructor(x: number, y: number, width: number, height: number);
+    copy(): Rect;
     get topLeft(): Point;
     get top(): Point;
     get topRight(): Point;
@@ -23,13 +32,15 @@ export declare class Rect extends Point {
     collideWithType(type: FunctionConstructor, xs: number, ys: number): boolean;
     collideWithTypes(type: FunctionConstructor[], xs: number, ys: number): boolean;
 }
+export type Radians = number;
+export type Angle = number;
 export declare const GameMath: {
-    readonly toRadians: (angle: number) => number;
-    readonly toAngle: (radians: number) => number;
+    readonly toRadians: (angle: Angle) => Radians;
+    readonly toAngle: (radians: Radians) => Angle;
     readonly distance: (a: Point, b: Point) => number;
     readonly angleBetween: (a: Point, b: Point) => number;
-    readonly towardsRadians: (radians: number) => Point;
-    readonly towards: (angle: number) => Point;
+    readonly towardsRadians: (radians: Radians) => Point;
+    readonly towards: (angle: Angle) => Point;
     readonly random: (min: number, max: number) => number;
     readonly sign: (x: number) => 0 | 1 | -1;
     readonly lerp: (a: number, b: number, t: number) => number;

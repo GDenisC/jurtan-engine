@@ -7,16 +7,28 @@ export type ColorRGBA = {
     a: number;
 } & ColorRGB;
 export type Color = ColorRGB & Partial<ColorRGBA>;
-export declare const createColor: (r: number, g: number, b: number, a?: number) => Color;
-export declare const toCanvasColor: (color: Color) => string;
-export declare const newColor: (r: number, g: number, b: number, a?: number) => string;
+export type AnyColor = Color | string | [number, number, number] | [number, number, number, number];
 export declare const Color: {
-    readonly black: string;
-    readonly white: string;
-    readonly red: string;
-    readonly green: string;
-    readonly blue: string;
-    readonly yellow: string;
-    readonly cyan: string;
-    readonly magenta: string;
+    readonly black: Color;
+    readonly white: Color;
+    readonly red: Color;
+    readonly green: Color;
+    readonly blue: Color;
+    readonly yellow: Color;
+    readonly cyan: Color;
+    readonly magenta: Color;
+    /**
+     * Create `Color` from RGBA
+     */
+    readonly create: (r: number, g: number, b: number, a?: number) => Color;
+    /**
+     * Convert `Color` to canvas color
+     */
+    readonly convert: (color: Color) => string;
+    /**
+     * Create canvas color from RGBA
+     */
+    readonly from: (r: number, g: number, b: number, a?: number) => string;
+    readonly mix: (a: ColorRGB, b: ColorRGB, t?: number) => ColorRGB;
+    readonly alpha: (c: ColorRGB, a: number) => Color;
 };

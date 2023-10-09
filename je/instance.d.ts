@@ -1,18 +1,19 @@
 import { Point, Rect } from "./math.js";
 import { Canvas } from "./canvas.js";
-import { Color } from "./colors.js";
+import { AnyColor } from "./colors.js";
 import { ChildrenArray } from "./childrenArray.js";
+export interface Rectable {
+    get rect(): Rect;
+}
 export declare abstract class Instance extends ChildrenArray<Instance> {
-    private _canvas;
     private firstUpdate;
-    private clipStroke;
-    protected _dontTranslate: boolean;
+    protected dontTranslate: boolean;
     protected drawChildBottom: boolean;
     index: number;
     depth: number;
-    rotation: number;
     x: number;
     y: number;
+    clipStroke: boolean;
     constructor();
     onCreate(): void;
     onBegin(): void;
@@ -20,28 +21,38 @@ export declare abstract class Instance extends ChildrenArray<Instance> {
     onUpdate(): void;
     onDraw(): void;
     _update(ctx: CanvasRenderingContext2D): void;
-    setFontAlign(align: CanvasTextAlign): void;
-    setFillColor(color: string): void;
-    setStrokeColor(color: string): void;
-    setColor(color: Color): void;
-    setColor(r: number, g: number, b: number, a?: number): void;
-    setColor(color: string): void;
-    setFontBaseline(baseline: CanvasTextBaseline): void;
-    setFont(font: string): void;
-    fillRect(x: number, y: number, width: number, height: number): void;
-    fillCircle(x: number, y: number, radius: number): void;
-    private stroke;
-    strokeRect(x: number, y: number, width: number, height: number): void;
-    strokeCircle(x: number, y: number, radius: number): void;
-    setClipStroke(clipStroke: boolean): void;
-    drawText(x: number, y: number, ...text: any[]): void;
+    translate(x: number, y: number): void;
+    save(): void;
+    restore(): void;
+    get lineWidth(): number;
+    set lineWidth(w: number);
+    set fontAlign(align: CanvasTextAlign);
+    private setColor;
+    set fillColor(c: AnyColor);
+    set strokeColor(c: AnyColor);
+    set fontBaseline(baseline: CanvasTextBaseline);
+    set font(font: string);
+    rectangle(x: number, y: number, width: number, height: number): void;
+    circle(x: number, y: number, radius: number): void;
+    path(vertexes: Point[], closePath?: boolean): void;
+    polygon(angles: number, { scale, rotation }: Partial<{
+        scale: number;
+        rotation: number;
+    }>): void;
+    fill(): void;
+    stroke(): void;
+    fillText(x: number, y: number, ...text: any[]): void;
+    strokeText(x: number, y: number, ...text: any[]): void;
     drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number): void;
-    setAlpha(value?: number): void;
+    /**
+     * @param value Alpha value from 0 to 1 (decimal).
+     */
+    set alpha(value: number);
     measureText(...text: any[]): TextMetrics;
     destroy(cleanup?: boolean): void;
     getRect(width: number, height: number): Rect;
     isClassOf(...instancesClasses: FunctionConstructor[]): boolean;
-    addToCanvas(): void;
+    addToMain(): void;
     get pos(): Point;
     set pos(p: Point);
     get canvas(): Canvas;

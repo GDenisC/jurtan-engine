@@ -4,12 +4,12 @@ import { Instance } from "./instance.js";
 export class Grid extends Instance {
     constructor(public gridSize = 30, public color = Color.create(0, 0, 0, 0.1)) {
         super();
-        this._dontTranslate = true;
+        this.dontTranslate = true;
     }
 
     onDraw() {
         this.ctx.translate(-this.canvas.camera.x, -this.canvas.camera.y);
-        this.setColor(this.color);
+        this.strokeColor = this.color;
         this.ctx.beginPath();
         for (let x = (this.canvas.width / 2 - this.x) % this.gridSize; x < this.canvas.width; x += this.gridSize) {
             this.ctx.moveTo(x, 0);
@@ -21,6 +21,5 @@ export class Grid extends Instance {
         }
         this.ctx.closePath();
         this.ctx.stroke();
-        this.setColor(Color.white);
     }
 }

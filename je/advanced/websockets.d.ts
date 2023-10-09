@@ -2,6 +2,7 @@ import { EventEmitter } from "../eventEmitter.js";
 export declare class Socket<MessageType = Record<string | symbol, any>> extends EventEmitter {
     url: string;
     websocket: WebSocket | null;
+    parseJson: boolean;
     constructor(url: string);
     connect(): void;
     talk(data: MessageType): void;

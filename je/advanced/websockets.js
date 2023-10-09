@@ -4,11 +4,12 @@ export class Socket extends EventEmitter {
         super();
         this.url = url;
         this.websocket = null;
+        this.parseJson = true;
     }
     connect() {
         this.websocket = new WebSocket(this.url);
         this.websocket.addEventListener('open', () => this.emit('open', this));
-        this.websocket.addEventListener('message', data => this.emit('message', data.data));
+        this.websocket.addEventListener('message', data => this.emit('message', this.parseJson ? JSON.parse(data.data) : data.data));
         this.websocket.addEventListener('close', () => this.emit('close'));
         this.websocket.addEventListener('error', error => this.emit('error', error));
     }

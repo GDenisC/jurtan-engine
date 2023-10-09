@@ -7,6 +7,12 @@ export class Point {
         this.x = x;
         this.y = y;
     }
+    copy() {
+        return new Point(this.x, this.y);
+    }
+    static from(vec) {
+        return new Point(vec.x, vec.y);
+    }
 }
 export class Rect extends Point {
     constructor(x, y, width, height) {
@@ -15,6 +21,9 @@ export class Rect extends Point {
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+    copy() {
+        return new Rect(this.x, this.y, this.width, this.height);
     }
     get topLeft() {
         return new Point(this.x - this.width / 2, this.y - this.height / 2);

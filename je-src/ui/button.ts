@@ -1,13 +1,10 @@
 import { Collisions } from "../collisions.js";
-import { Color } from "../colors.js";
-import { Instance } from "../instance.js";
+import { Instance, Rectable } from "../instance.js";
 import { Mouse } from "../mouse.js";
 
-export class Button extends Instance {
+export class Button extends Instance implements Rectable {
     hover = false;
     hold = false;
-    color = Color.create(255, 255, 255);
-    text = 'Button';
     disabled = false;
 
     constructor(x: number, y: number, public width: number, public height: number) {
@@ -47,18 +44,6 @@ export class Button extends Instance {
                 this.hold = false;
             }
         }
-    }
-
-    onDraw() {
-        this.setColor(this.color.r, this.color.g, this.color.b, this.color.a);
-        this.fillRect(this.x, this.y, this.width, this.height);
-        this.setFont('24px Arial');
-        this.setFontAlign('center');
-        this.setFontBaseline('middle');
-        this.setColor(0, 0, 0);
-        this.drawText(this.x, this.y, this.text);
-        this.setFontAlign('left');
-        this.setFontBaseline('top');
     }
 
     get rect() {

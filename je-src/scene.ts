@@ -7,6 +7,6 @@ import { Instance } from "./instance.js";
 export class Scene extends Instance {
     constructor() {
         super();
-        this.canvas.addChild(this);
+        this.addToMain();
     }
 }

@@ -8,7 +8,7 @@ const cv = new Canvas({
     ratio: true
 });
 
-// WARN: MADE IN VERSION BETA v1.1.1
+// WARN: MADE IN VERSION BETA v1.1.1, UPDATED TO v1.2
 
 new MainMenu();
 

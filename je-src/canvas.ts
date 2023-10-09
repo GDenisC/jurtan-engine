@@ -2,11 +2,20 @@ import { Instance } from "./instance.js";
 import { images } from "./images.js";
 import { Point } from "./math.js";
 
-type CanvasOtherOptions = Partial<{
-    render: 'pixelated' | 'crisp-edges',
+type CanvasOtherOptions = {
+    render: 'pixelated' | 'crisp-edges' | 'auto',
     smooth: boolean,
     ratio: boolean
-}>;
+}
+
+type CanvasResolution = {
+    width: number,
+    height: number
+}
+
+/*
+
+// fullscreen
 
 type CanvasScreenOptions = {
     width: number,
@@ -20,6 +29,10 @@ type CanvasFullscreenOptions = {
 
 export type CanvasOptions = CanvasScreenOptions | CanvasFullscreenOptions;
 
+*/
+
+export type CanvasOptions = CanvasResolution & CanvasOtherOptions;
+
 export const getCanvasInstance = () => {
     if (!Canvas.instance) {
         throw new Error('Canvas not initialized');
@@ -30,33 +43,30 @@ export const getInstances = () => getCanvasInstance().instances;
 
 export class Canvas {
     static instance: Canvas | null;
-    options: CanvasOptions;
     tag: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     instances: Instance[] = [];
     camera: Point;
     backgroundColor = 'rgb(30, 30, 30)';
+    options: CanvasOptions;
 
-    constructor(options?: CanvasOptions) {
+    constructor(options: CanvasResolution & Partial<CanvasOtherOptions> = { width: 1366, height: 768 }) {
         if (!Canvas.instance) Canvas.instance = this;
         else throw new Error('Canvas instance already exists, use getCanvasInstance() instead of new Canvas().')
 
-        this.options = options || {
-            width: 1366,
-            height: 768
-        };
+        options.ratio ??= true;
+        options.smooth ??= false;
+        options.render ??= 'auto';
+
+        this.options = options as CanvasOptions;
+
         this.tag = document.getElementById('canvas') as HTMLCanvasElement;
 
         if (!this.tag)
             throw new Error('Canvas not found');
 
-        if (!this.options.fullscreen) {
-            this.tag.width = this.options.width * this.ratio;
-            this.tag.height = this.options.height * this.ratio;
-        } else {
-            this.tag.width = 1920;
-            this.tag.height = 1280;
-        }
+        this.tag.width = this.options.width * this.ratio;
+        this.tag.height = this.options.height * this.ratio;
 
         this.ctx = this.tag.getContext('2d') as CanvasRenderingContext2D;
 
@@ -72,23 +82,18 @@ export class Canvas {
         window.addEventListener('resize', () => this.resizeWindow())
         this.resizeWindow();
         this.tag.addEventListener('contextmenu', e => e.preventDefault())
-        this.tag.style.imageRendering = this.options.render ?? 'auto';
-        this.ctx.imageSmoothingEnabled = this.options.smooth ?? false;
+        this.tag.style.imageRendering = this.options.render;
+        this.ctx.imageSmoothingEnabled = this.options.smooth;
     }
 
     private resizeWindow() {
         const { width, height } = this.realSize;
-        if (!this.options.fullscreen) {
-            this.tag.width = this.options.width * this.ratio;
-            this.tag.height = this.options.height * this.ratio;
-            this.tag.style.width = `${width}px`;
-            this.tag.style.height = `${height}px`;
-            this.tag.style.top = `${window.innerHeight / 2 - height / 2}px`;
-            this.tag.style.left = `${window.innerWidth / 2 - width / 2}px`;
-        } else {
-            this.tag.style.width = `${window.innerWidth}px`;
-            this.tag.style.height = `${window.innerHeight}px`;
-        }
+        this.tag.width = this.options.width * this.ratio;
+        this.tag.height = this.options.height * this.ratio;
+        this.tag.style.width = `${width}px`;
+        this.tag.style.height = `${height}px`;
+        this.tag.style.top = `${window.innerHeight / 2 - height / 2}px`;
+        this.tag.style.left = `${window.innerWidth / 2 - width / 2}px`;
     }
 
     loadAllImages(): Promise<HTMLImageElement[]> {
@@ -138,9 +143,8 @@ export class Canvas {
         this.runAsync();
     }
 
-    addChild(instance: Instance) {
+    add(instance: Instance) {
         this.instances.push(instance);
-
     }
 
     get width() {
@@ -159,10 +163,7 @@ export class Canvas {
     }
 
     get center() {
-        return {
-            x: this.width / 2,
-            y: this.height / 2
-        };
+        return new Point(this.width / 2, this.height / 2);
     }
 
     get ratio() {

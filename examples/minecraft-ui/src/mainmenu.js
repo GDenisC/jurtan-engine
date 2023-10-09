@@ -6,16 +6,17 @@ class TestButton extends Button {
     constructor(x, y, size) {
         super(x, y, size, size);
         this.image = loadImage('slot.png');
-        this.setColor(255, 255, 255);
         this.hover = false
     }
 
     onDraw() {
+        this.fillColor = [255, 255, 255];
         this.drawImage(this.image, 0, 0, this.width, this.height);
         if (this.hover) {
-            this.setAlpha(0.2);
-            this.fillRect(0, 0, this.width, this.height);
-            this.setAlpha();
+            this.alpha = 0.2;
+            this.rectangle(0, 0, this.width, this.height);
+            this.fill();
+            this.alpha = 1;
         }
     }
 }
@@ -62,9 +63,9 @@ export default class MainMenu extends Scene {
     }
 
     onDraw() {
-        this.setFontAlign('center');
-        this.setFontBaseline('top');
-        this.setFont('48px Minecraft');
-        this.drawText(this.canvas.width / 2, 24, 'Minecraft');
+        this.fontAlign = 'center';
+        this.fontBaseline = 'top';
+        this.font = '48px Minecraft';
+        this.fillText(this.canvas.width / 2, 24, 'Minecraft');
     }
 }

@@ -8,15 +8,17 @@ export type ColorRGBA = { a: number } & ColorRGB;
 
 export type Color = ColorRGB & Partial<ColorRGBA>;
 
+export type AnyColor = Color | string | [number, number, number] | [number, number, number, number];
+
 export const Color = {
-    black: 'black',
-    white: 'white',
-    red: 'red',
-    green: 'green',
-    blue: 'blue',
-    yellow: 'yellow',
-    cyan: 'cyan',
-    magenta: 'magenta',
+    black: { r: 0, g: 0, b: 0 } as Color,
+    white: { r: 255, g: 255, b: 255 } as Color,
+    red: { r: 255, g: 0, b: 0 } as Color,
+    green: { r: 0, g: 255, b: 0 } as Color,
+    blue: { r: 0, g: 0, b: 255 } as Color,
+    yellow: { r: 255, g: 255, b: 0 } as Color,
+    cyan: { r: 0, g: 255, b: 255 } as Color,
+    magenta: { r: 255, g: 0, b: 255 } as Color,
 
     /**
      * Create `Color` from RGBA
@@ -39,5 +41,6 @@ export const Color = {
             a.g * (1 - t) + b.g * t,
             a.b * (1 - t) + b.b * t
         );
-    }
+    },
+    alpha: (c: ColorRGB, a: number) => Color.create(c.r, c.g, c.b, a),
 } as const;
