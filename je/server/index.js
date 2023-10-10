@@ -1,6 +1,4 @@
-// check is NodeJS
-const isNode = typeof process !== 'undefined';
-if (!isNode) {
+if (typeof process == 'undefined') {
     throw new Error('`WebServer` can only be used in NodeJS');
 }
 import { existsSync, createReadStream, lstatSync } from 'fs';
@@ -21,6 +19,7 @@ export class WebServer extends EventEmitter {
     constructor(directory = './dist') {
         super();
         this.sockets = [];
+        this.wss = new WebSocketServer({ noServer: true });
         this.http = createServer((req, res) => {
             let path = '';
             if (!req.url)
@@ -34,7 +33,6 @@ export class WebServer extends EventEmitter {
             res.writeHead(200, { 'Content-Type': ext ? mimeSet[ext] || 'text/html' : 'text/html' });
             return createReadStream(path).pipe(res);
         });
-        this.wss = new WebSocketServer({ noServer: true });
     }
     listen(port) {
         this.http.on('upgrade', (req, socket, head) => {

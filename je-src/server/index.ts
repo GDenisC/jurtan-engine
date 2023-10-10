@@ -1,8 +1,4 @@
-
-// check is NodeJS
-const isNode = typeof process !== 'undefined'
-
-if (!isNode) {
+if (typeof process == 'undefined') {
     throw new Error('`WebServer` can only be used in NodeJS')
 }
 
@@ -29,6 +25,7 @@ export class WebServer<T extends WebSocket = WebSocket, Message = Record<string 
 
     constructor(directory = './dist') {
         super();
+        this.wss = new WebSocketServer({ noServer: true });
         this.http = createServer((req, res) => {
             let path = '';
             if (!req.url) path = directory + '/index.html';
@@ -43,7 +40,6 @@ export class WebServer<T extends WebSocket = WebSocket, Message = Record<string 
 
             return createReadStream(path).pipe(res);
         });
-        this.wss = new WebSocketServer({ noServer: true });
     }
 
     listen(port: number) {
