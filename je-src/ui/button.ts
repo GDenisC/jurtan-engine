@@ -17,7 +17,7 @@ export class Button extends Instance implements Rectable {
      * `super.onUpdate()` is required
      */
     onUpdate() {
-        if (!this.disabled && Collisions.pointToRect(Mouse.getPosition(), this.rect, true)) {
+        if (!this.disabled && Collisions.pointToRect(Mouse.position, this.rect, true)) {
             if (this.hover != true) {
                 this.onOver();
                 this.hover = true;
