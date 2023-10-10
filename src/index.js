@@ -6,8 +6,4 @@ const cv = new Canvas({
     height: 768
 });
 
-Request.get('http://httpbin.org/get').then(data => {
-    console.log(data);
-});
-
 cv.start();
