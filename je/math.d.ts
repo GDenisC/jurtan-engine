@@ -12,6 +12,12 @@ export declare class Point implements Copyable<Point> {
         y: number;
     }): Point;
 }
+export declare class Circle extends Point implements Copyable<Circle> {
+    radius: number;
+    constructor(x: number, y: number, radius: number);
+    copy(): Circle;
+    collides(b: Circle): boolean;
+}
 export declare class Rect extends Point implements Copyable<Rect> {
     x: number;
     y: number;

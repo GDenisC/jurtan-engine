@@ -14,6 +14,18 @@ export class Point {
         return new Point(vec.x, vec.y);
     }
 }
+export class Circle extends Point {
+    constructor(x, y, radius) {
+        super(x, y);
+        this.radius = radius;
+    }
+    copy() {
+        return new Circle(this.x, this.y, this.radius);
+    }
+    collides(b) {
+        return Collisions.circleToCircle(this, b);
+    }
+}
 export class Rect extends Point {
     constructor(x, y, width, height) {
         super(x, y);

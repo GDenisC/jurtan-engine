@@ -1,4 +1,4 @@
-import { Point, Rect } from "./math.js";
+import { Circle, Point, Rect } from "./math.js";
 export declare const Collisions: {
     readonly pointToPoint: (a: Point, b: Point) => boolean;
     readonly pointToRect: (a: Point, b: Rect, addSize?: boolean, debug?: boolean) => boolean;
@@ -6,4 +6,5 @@ export declare const Collisions: {
         subPos?: boolean;
         debug?: boolean;
     }) => boolean;
+    readonly circleToCircle: (a: Circle, b: Circle) => boolean;
 };

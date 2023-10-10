@@ -1,5 +1,5 @@
 import { getCanvasInstance } from "./canvas.js";
-import { Point, Rect } from "./math.js";
+import { Circle, Point, Rect } from "./math.js";
 
 export const Collisions = {
     pointToPoint: (a: Point, b: Point) => a.x == b.x && a.y == b.y,
@@ -45,5 +45,6 @@ export const Collisions = {
             y + a.height >= y2           &&
             y            <= y2 + b.height
         );
-    }
+    },
+    circleToCircle: (a: Circle, b: Circle) => Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2) <= a.radius + b.radius
 } as const;

@@ -41,6 +41,7 @@ export const Collisions = {
             x <= x2 + b.width &&
             y + a.height >= y2 &&
             y <= y2 + b.height);
-    }
+    },
+    circleToCircle: (a, b) => Math.sqrt(Math.pow((a.x - b.x), 2) + Math.pow((a.y - b.y), 2)) <= a.radius + b.radius
 };
 //# sourceMappingURL=collisions.js.map

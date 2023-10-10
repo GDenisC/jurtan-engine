@@ -20,6 +20,20 @@ export class Point implements Copyable<Point> {
     }
 }
 
+export class Circle extends Point implements Copyable<Circle> {
+    constructor(x: number, y: number, public radius: number) {
+        super(x, y);
+    }
+
+    copy() {
+        return new Circle(this.x, this.y, this.radius);
+    }
+
+    collides(b: Circle) {
+        return Collisions.circleToCircle(this, b);
+    }
+}
+
 export class Rect extends Point implements Copyable<Rect> {
     constructor(public x: number, public y: number, public width: number, public height: number) {
         super(x, y);
