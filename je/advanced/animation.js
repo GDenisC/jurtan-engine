@@ -61,8 +61,8 @@ export var AnimationType;
     AnimationType[AnimationType["Both"] = 2] = "Both";
 })(AnimationType || (AnimationType = {}));
 export class Animator {
-    constructor(animation, seconds = 1, endType = AnimationEndType.Repeat, animType = AnimationType.Normal) {
-        this.seconds = seconds;
+    constructor(animation, frames = 60, endType = AnimationEndType.Repeat, animType = AnimationType.Normal) {
+        this.frames = frames;
         this.endType = endType;
         this.animType = animType;
         this.isReverse = false;
@@ -97,7 +97,7 @@ export class Animator {
         return x < 0.5 ? this.animation(x * 2) / 2 : (2 - this.animation(2 * (1 - x))) / 2;
     }
     get stepSize() {
-        return 1 / this.seconds;
+        return 1 / this.frames;
     }
 }
 //# sourceMappingURL=animation.js.map

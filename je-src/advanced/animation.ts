@@ -79,7 +79,7 @@ export class Animator {
     animation: (x: number) => number;
     position: number = 0;
 
-    constructor(animation: Animation, public seconds: number = 1, public endType = AnimationEndType.Repeat, public animType = AnimationType.Normal) {
+    constructor(animation: Animation, public frames: number = 60, public endType = AnimationEndType.Repeat, public animType = AnimationType.Normal) {
         this.animation = animation.getY;
 
         this.endTypes = {
@@ -116,6 +116,6 @@ export class Animator {
     }
 
     get stepSize() {
-        return 1 / this.seconds;
+        return 1 / this.frames;
     }
 }

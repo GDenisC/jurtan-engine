@@ -42,7 +42,7 @@ export declare enum AnimationType {
     Both = 2
 }
 export declare class Animator {
-    seconds: number;
+    frames: number;
     endType: AnimationEndType;
     animType: AnimationType;
     protected endTypes: Record<AnimationEndType, () => void>;
@@ -50,7 +50,7 @@ export declare class Animator {
     protected isReverse: boolean;
     animation: (x: number) => number;
     position: number;
-    constructor(animation: Animation, seconds?: number, endType?: AnimationEndType, animType?: AnimationType);
+    constructor(animation: Animation, frames?: number, endType?: AnimationEndType, animType?: AnimationType);
     update(): number;
     easeOut(x: number): number;
     easeInOut(x: number): number;
