@@ -9,17 +9,17 @@ export declare class Session {
     url: string;
     options: SessionParams;
     constructor(url: string, params?: Partial<SessionParams>);
-    protected request(path: string, type: 'get' | 'post' | 'put' | 'delete', data?: Dictionary): Promise<unknown>;
-    get(path?: string): Promise<unknown>;
-    post(path?: string, data?: Dictionary): Promise<unknown>;
-    put(path?: string, data?: Dictionary): Promise<unknown>;
-    delete(path?: string, data?: Dictionary): Promise<unknown>;
-    get urlScheme(): "http" | "https";
+    protected request(path: string, type: 'get' | 'post' | 'put' | 'delete', data?: Dictionary): Promise<any>;
+    get(path?: string): Promise<any>;
+    post(path?: string, data?: Dictionary): Promise<any>;
+    put(path?: string, data?: Dictionary): Promise<any>;
+    delete(path?: string, data?: Dictionary): Promise<any>;
+    get urlScheme(): "https" | "http";
 }
 export declare const Request: {
-    readonly get: (url: string, params?: SessionParams) => Promise<unknown>;
-    readonly post: (url: string, params?: SessionParams) => Promise<unknown>;
-    readonly put: (url: string, params?: SessionParams) => Promise<unknown>;
-    readonly delete: (url: string, params?: SessionParams) => Promise<unknown>;
+    readonly get: (url: string, params?: SessionParams) => Promise<any>;
+    readonly post: (url: string, params?: SessionParams) => Promise<any>;
+    readonly put: (url: string, params?: SessionParams) => Promise<any>;
+    readonly delete: (url: string, params?: SessionParams) => Promise<any>;
 };
 export {};

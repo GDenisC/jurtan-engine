@@ -7,7 +7,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import axios from 'axios';
+let req = window['axios'];
+if (req == undefined) {
+    req = {};
+    for (const type of ['get', 'post', 'put', 'delete']) {
+        req[type] = (url, options) => __awaiter(void 0, void 0, void 0, function* () {
+            const res = yield fetch(url, Object.assign({ method: type.toUpperCase() }, options));
+            const { status, statusText, headers } = res;
+            let data = null;
+            try {
+                data = yield res.json();
+            }
+            catch (_a) {
+                data = yield res.text();
+            }
+            return { data, status, statusText, headers };
+        });
+    }
+}
 export class Session {
     constructor(url, params = {}) {
         var _a;
@@ -18,11 +35,11 @@ export class Session {
     request(path, type, data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                return yield axios[type].apply(null, [this.url + path, type != 'get' ? data : null, this.options]
+                return yield req[type].apply(null, [this.url + path, type != 'get' ? data : null, this.options]
                     .filter(x => x != null));
             }
             catch (e) {
-                const error = e;
+                const error = e; // AxiosError
                 if (error.response)
                     return error.response;
                 throw error;

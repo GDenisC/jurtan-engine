@@ -53,7 +53,6 @@ export const Keyboard = new class extends EventEmitter {
         this.keys.forEach((pressed, key) => {
             if (pressed) {
                 this.keys.set(key, false);
-                console.log(key);
             }
         })
     }
