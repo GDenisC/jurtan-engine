@@ -1,6 +1,8 @@
 import { Instance } from "./instance.js";
 import { images } from "./images.js";
 import { Point } from "./math.js";
+import { Mouse } from "./mouse.js";
+import { Keyboard } from "./keyboard.js";
 
 type CanvasOtherOptions = {
     render: 'pixelated' | 'crisp-edges' | 'auto',
@@ -130,7 +132,8 @@ export class Canvas {
         }
 
         ctx.restore();
-
+        Mouse.update();
+        Keyboard.update();
         requestAnimationFrame(this.renderLoop.bind(this));
     }
 

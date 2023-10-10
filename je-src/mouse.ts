@@ -1,48 +1,59 @@
 import { Canvas, getCanvasInstance } from "./canvas.js"
+import { EventEmitter } from "./eventEmitter.js"
 import { Point } from "./math.js"
 
-type MouseType = {
-    buttons: Set<number>,
-    x: number,
-    y: number
-}
+addEventListener('mousedown', e => Mouse.emit('mouseDown', e))
+addEventListener('mouseup',   e => Mouse.emit('mouseUp',   e))
+addEventListener('mousemove', e => Mouse.emit('mouseMove', e))
 
-const mouse: MouseType = {
-    buttons: new Set(),
-    x: 0,
-    y: 0
-}
+let canvasInstance: Canvas | null = null;
 
-addEventListener('mousedown', e => {
-    mouse.buttons.add(e.button);
-})
+export const Mouse = new class extends EventEmitter {
+    buttons: Map<number, boolean> = new Map();
+    position: Point = new Point(0, 0);
 
-addEventListener('mouseup', e => {
-    mouse.buttons.delete(e.button);
-})
-
-let memory: Canvas | null = null;
-
-addEventListener('mousemove', e => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-})
-
-export const Mouse = {
-    isPressed: (button: number) => mouse.buttons.has(button),
-
-    getPosition: () => {
-        if (!memory) {
-            memory = getCanvasInstance();
-        }
-        const rect = memory.tag.getBoundingClientRect();
-        const ratio = [
-            memory.width / rect.width,
-            memory.height / rect.height
-        ]
-        return new Point(
-            mouse.x - rect.left * ratio[0],
-            mouse.y - rect.top  * ratio[1]
-        )
+    constructor() {
+        super();
+        this.on('mouseDown', e => this.buttons.set(e.button, true));
+        this.on('mouseUp',   e => this.buttons.delete(e.button));
+        this.on('mouseMove', e => {
+            const rect = this.canvas.tag.getBoundingClientRect();
+            const ratio = [
+                this.canvas.width / rect.width,
+                this.canvas.height / rect.height
+            ]
+            this.position = new Point(
+                e.clientX - rect.left * ratio[0],
+                e.clientY - rect.top  * ratio[1]
+            );
+        });
     }
-} as const;
+
+    isPressed(button: number) {
+        return this.buttons.has(button);
+    }
+
+    isClicked(button: number) {
+        return this.buttons.get(button) ?? false;
+    }
+
+    update() {
+        this.buttons.forEach((pressed, button) => {
+            if (pressed) {
+                this.buttons.set(button, false);
+            }
+        })
+    }
+
+    get canvas() {
+        if (!canvasInstance) canvasInstance = getCanvasInstance();
+        return canvasInstance;
+    }
+
+    on(event: 'mouseDown', listener: (e: MouseEvent) => any): void;
+    on(event: 'mouseUp', listener: (e: MouseEvent) => any): void;
+    on(event: 'mouseMove', listener: (e: MouseEvent) => any): void;
+    on(event: string, listener: (...args: any[]) => void) {
+        super.on(event, listener);
+    }
+};

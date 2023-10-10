@@ -9,6 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { images } from "./images.js";
 import { Point } from "./math.js";
+import { Mouse } from "./mouse.js";
+import { Keyboard } from "./keyboard.js";
 export const getCanvasInstance = () => {
     if (!Canvas.instance) {
         throw new Error('Canvas not initialized');
@@ -85,6 +87,8 @@ export class Canvas {
             instance._update(ctx);
         }
         ctx.restore();
+        Mouse.update();
+        Keyboard.update();
         requestAnimationFrame(this.renderLoop.bind(this));
     }
     runAsync() {
