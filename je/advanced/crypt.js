@@ -1,9 +1,19 @@
 export const Crypt = {
     decodeBase64: (data) => {
-        return new TextDecoder().decode(atob(data));
+        try {
+            return atob(data);
+        }
+        catch (_a) {
+            return data;
+        }
     },
     encodeBase64: (data) => {
-        return btoa(new TextEncoder().encode(data));
+        try {
+            return btoa(data);
+        }
+        catch (_a) {
+            return data;
+        }
     },
     reverse: (data) => data.split('').reverse().join('')
 };

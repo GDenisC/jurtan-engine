@@ -5,28 +5,54 @@ export declare abstract class Animation {
      */
     abstract getY(x: number): number;
 }
-export interface AnimationConstructor {
-    new (): Animation;
+export declare class LinealAnimation {
     getY(x: number): number;
 }
-export declare class LinealAnimation {
+export declare class QuadAnimation {
     getY(x: number): number;
 }
 export declare class LerpAnimation {
     lerp(a: number, b: number, t: number): number;
     getY(x: number): number;
 }
-export declare enum AnimatorEndType {
+export declare class CircAnimation {
+    getY(x: number): number;
+}
+export declare class BackAnimation {
+    elastic: number;
+    constructor(elastic?: number);
+    getY(x: number): number;
+}
+export declare class BounceAnimation {
+    getY(x: number): number | undefined;
+}
+export declare class ElasticAnimation {
+    offset: number;
+    constructor(offset?: number);
+    getY(x: number): number;
+}
+export declare enum AnimationEndType {
     Repeat = 0,
     Stop = 1,
     Reverse = 2
 }
+export declare enum AnimationType {
+    Normal = 0,
+    Reversed = 1,
+    Both = 2
+}
 export declare class Animator {
-    endType: AnimatorEndType;
-    stepSize: number;
+    seconds: number;
+    endType: AnimationEndType;
+    animType: AnimationType;
+    protected endTypes: Record<AnimationEndType, () => void>;
+    protected animTypes: Record<AnimationType, () => number>;
     protected isReverse: boolean;
-    animation: Animation;
+    animation: (x: number) => number;
     position: number;
-    constructor(animation: AnimationConstructor, endType: AnimatorEndType, stepSize: number);
+    constructor(animation: Animation, seconds?: number, endType?: AnimationEndType, animType?: AnimationType);
     update(): number;
+    easeOut(x: number): number;
+    easeInOut(x: number): number;
+    get stepSize(): number;
 }
