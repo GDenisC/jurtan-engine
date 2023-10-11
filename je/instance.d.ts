@@ -40,7 +40,9 @@ export declare abstract class Instance extends ChildrenArray<Instance> {
         rotation: number;
     }>): void;
     fill(): void;
+    fill(color: AnyColor): void;
     stroke(): void;
+    stroke(color: AnyColor): void;
     fillText(x: number, y: number, ...text: any[]): void;
     strokeText(x: number, y: number, ...text: any[]): void;
     drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number): void;

@@ -28,6 +28,8 @@ export class Instance extends ChildrenArray {
         this.onUpdate();
         if (!this.dontTranslate)
             ctx.translate(this.x, this.y);
+        if (this.canvas.options.fullscreen)
+            ctx.scale(this.canvas.gameRatio, this.canvas.gameRatio);
         if (!this.firstUpdate) {
             this.onBegin();
             this.firstUpdate = true;
@@ -97,10 +99,14 @@ export class Instance extends ChildrenArray {
         const theta = 2 * Math.PI / angles;
         this.path(Array.from({ length: angles }, (_, i) => new Point(Math.cos(i * theta + rotation / 180 * Math.PI) * scale, Math.sin(i * theta + rotation / 180 * Math.PI) * scale)));
     }
-    fill() {
+    fill(color) {
+        if (color)
+            this.fillColor = color;
         this.ctx.fill();
     }
-    stroke() {
+    stroke(color) {
+        if (color)
+            this.strokeColor = color;
         if (this.clipStroke) {
             this.save();
             {
@@ -134,9 +140,9 @@ export class Instance extends ChildrenArray {
         return this.ctx.measureText(text.join(' '));
     }
     destroy(cleanup = true) {
+        this.onDestroy();
         if (cleanup)
             this.children.forEach(child => child.destroy());
-        this.onDestroy();
         this.canvas.instances.splice(this.canvas.instances.indexOf(this), 1);
     }
     getRect(width, height) {

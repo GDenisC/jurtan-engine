@@ -103,6 +103,7 @@ export const GameMath = {
     // other
     random: (min, max) => Math.random() * (max - min) + min,
     sign: (x) => x > 0 ? 1 : x < 0 ? -1 : 0,
-    lerp: (a, b, t) => a * (1 - t) + b * t
+    lerp: (a, b, t) => a * (1 - t) + b * t,
+    clamp: (a, min, max) => Math.min(Math.max(a, min), max),
 };
 //# sourceMappingURL=math.js.map

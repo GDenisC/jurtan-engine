@@ -50,4 +50,5 @@ export declare const GameMath: {
     readonly random: (min: number, max: number) => number;
     readonly sign: (x: number) => 0 | 1 | -1;
     readonly lerp: (a: number, b: number, t: number) => number;
+    readonly clamp: (a: number, min: number, max: number) => number;
 };
