@@ -5,4 +5,5 @@ export declare class Grid extends Instance {
     color: Color;
     constructor(gridSize?: number, color?: Color);
     onDraw(): void;
+    drawGrid(translateCamera?: boolean): void;
 }
