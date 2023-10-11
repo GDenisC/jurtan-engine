@@ -9,4 +9,4 @@
 
 ## Reporting a Vulnerability
 
-Make an issue in [issues](https://github.com/GDenisC/jurtan-engine/issues)
+Make an issue in [advisories](https://github.com/GDenisC/jurtan-engine/security/advisories)
