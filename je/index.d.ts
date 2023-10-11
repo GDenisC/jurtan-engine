@@ -12,3 +12,4 @@ export { Grid } from './grid.js';
 export { Game } from './game.js';
 export { Collisions } from './collisions.js';
 export { Mouse } from './mouse.js';
+export { Mobile } from './mobile.js';

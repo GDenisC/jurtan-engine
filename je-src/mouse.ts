@@ -1,12 +1,30 @@
-import { Canvas, getCanvasInstance } from "./canvas.js"
-import { EventEmitter } from "./eventEmitter.js"
-import { Point } from "./math.js"
-
-addEventListener('mousedown', e => Mouse.emit('mouseDown', e))
-addEventListener('mouseup',   e => Mouse.emit('mouseUp',   e))
-addEventListener('mousemove', e => Mouse.emit('mouseMove', e))
+import { Canvas, getCanvasInstance } from "./canvas.js";
+import { EventEmitter } from "./eventEmitter.js";
+import { Point } from "./math.js";
+import { Mobile } from "./mobile.js";
 
 let canvasInstance: Canvas | null = null;
+
+if (Mobile.isMobile) {
+    const touchToMouse = (t: TouchEvent) => {
+        const touch = t.touches[0];
+        if (!touch) {
+            console.error('so idk, no touches');
+        }
+        return {
+            button: touch.identifier,
+            x: touch.clientX,
+            y: touch.clientY
+        };
+    }
+    addEventListener('touchstart', e => Mouse.emit('mouseDown', touchToMouse(e)))
+    addEventListener('touchend',   e => Mouse.emit('mouseUp',   touchToMouse(e)))
+    addEventListener('touchmove',  e => Mouse.emit('mouseMove', touchToMouse(e)))
+} else {
+    addEventListener('mousedown', e => Mouse.emit('mouseDown', e))
+    addEventListener('mouseup',   e => Mouse.emit('mouseUp',   e))
+    addEventListener('mousemove', e => Mouse.emit('mouseMove', e))
+}
 
 export const Mouse = new class extends EventEmitter {
     buttons: Map<number, boolean> = new Map();
