@@ -12,3 +12,5 @@ export type { RequestParams, SessionParams } from './requests.js';
 export { Request, Session } from './requests.js';
 
 export { Socket } from './websockets.js';
+
+// TODO: export { ParticleSpawner } from './particles.js';
