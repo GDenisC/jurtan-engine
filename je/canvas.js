@@ -20,7 +20,7 @@ export const getCanvasInstance = () => {
 export const getInstances = () => getCanvasInstance().instances;
 export class Canvas {
     constructor(options = { width: 1366, height: 768 }) {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         this.instances = [];
         this.backgroundColor = 'rgb(30, 30, 30)';
         if (!Canvas.instance)
@@ -30,12 +30,11 @@ export class Canvas {
         (_a = options.ratio) !== null && _a !== void 0 ? _a : (options.ratio = true);
         (_b = options.smooth) !== null && _b !== void 0 ? _b : (options.smooth = false);
         (_c = options.render) !== null && _c !== void 0 ? _c : (options.render = 'auto');
+        (_d = options.fullscreen) !== null && _d !== void 0 ? _d : (options.fullscreen = false);
         this.options = options;
         this.tag = document.getElementById('canvas');
         if (!this.tag)
             throw new Error('Canvas not found');
-        this.tag.width = this.options.width * this.ratio;
-        this.tag.height = this.options.height * this.ratio;
         this.ctx = this.tag.getContext('2d');
         if (!this.ctx)
             throw new Error('Canvas context not found');
@@ -50,6 +49,13 @@ export class Canvas {
         this.ctx.imageSmoothingEnabled = this.options.smooth;
     }
     resizeWindow() {
+        if (this.options.fullscreen) {
+            this.tag.style.width = `${window.innerWidth}px`;
+            this.tag.style.height = `${window.innerHeight}px`;
+            this.tag.width = window.innerWidth * this.ratio;
+            this.tag.height = window.innerHeight * this.ratio;
+            return;
+        }
         const { width, height } = this.realSize;
         this.tag.width = this.options.width * this.ratio;
         this.tag.height = this.options.height * this.ratio;
@@ -103,6 +109,9 @@ export class Canvas {
     add(instance) {
         this.instances.push(instance);
     }
+    get isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent);
+    }
     get width() {
         return this.tag.width / this.ratio;
     }
@@ -111,8 +120,8 @@ export class Canvas {
     }
     get realSize() {
         return {
-            width: this.ratio ? this.tag.width / this.ratio : this.tag.width,
-            height: this.ratio ? this.tag.height / this.ratio : this.tag.height
+            width: this.tag.width / this.ratio,
+            height: this.tag.height / this.ratio
         };
     }
     get center() {
@@ -120,6 +129,10 @@ export class Canvas {
     }
     get ratio() {
         return this.options.ratio ? window.devicePixelRatio : 1;
+    }
+    get gameRatio() {
+        const { realSize } = this;
+        return Math.min(realSize.width / realSize.height, realSize.height / realSize.width);
     }
 }
 //# sourceMappingURL=canvas.js.map

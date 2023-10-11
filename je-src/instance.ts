@@ -39,6 +39,7 @@ export abstract class Instance extends ChildrenArray<Instance> {
         ctx.save();
         this.onUpdate();
         if (!this.dontTranslate) ctx.translate(this.x, this.y);
+        if (this.canvas.options.fullscreen) ctx.scale(this.canvas.gameRatio, this.canvas.gameRatio);
         if (!this.firstUpdate) {
             this.onBegin();
             this.firstUpdate = true;
@@ -126,11 +127,17 @@ export abstract class Instance extends ChildrenArray<Instance> {
         );
     }
 
-    fill() {
+    fill(): void;
+    fill(color: AnyColor): void;
+    fill(color?: AnyColor) {
+        if (color) this.fillColor = color;
         this.ctx.fill();
     }
 
-    stroke() {
+    stroke(): void;
+    stroke(color: AnyColor): void;
+    stroke(color?: AnyColor) {
+        if (color) this.strokeColor = color;
         if (this.clipStroke) {
             this.save();
             {
@@ -169,8 +176,8 @@ export abstract class Instance extends ChildrenArray<Instance> {
     }
 
     destroy(cleanup = true) {
-        if (cleanup) this.children.forEach(child => child.destroy());
         this.onDestroy();
+        if (cleanup) this.children.forEach(child => child.destroy());
         this.canvas.instances.splice(this.canvas.instances.indexOf(this), 1);
     }
 

@@ -5,11 +5,15 @@ type CanvasOtherOptions = {
     smooth: boolean;
     ratio: boolean;
 };
-type CanvasResolution = {
+type CanvasScreenOptions = {
     width: number;
     height: number;
+    fullscreen?: false;
 };
-export type CanvasOptions = CanvasResolution & CanvasOtherOptions;
+type CanvasFullscreenOptions = {
+    fullscreen: true;
+};
+export type CanvasOptions<Options = CanvasOtherOptions> = (CanvasScreenOptions | CanvasFullscreenOptions) & Options;
 export declare const getCanvasInstance: () => Canvas;
 export declare const getInstances: () => Instance[];
 export declare class Canvas {
@@ -20,7 +24,7 @@ export declare class Canvas {
     camera: Point;
     backgroundColor: string;
     options: CanvasOptions;
-    constructor(options?: CanvasResolution & Partial<CanvasOtherOptions>);
+    constructor(options?: CanvasOptions<Partial<CanvasOtherOptions>>);
     private init;
     private resizeWindow;
     loadAllImages(): Promise<HTMLImageElement[]>;
@@ -28,6 +32,7 @@ export declare class Canvas {
     runAsync(): Promise<void>;
     start(): void;
     add(instance: Instance): void;
+    get isMobile(): boolean;
     get width(): number;
     get height(): number;
     get realSize(): {
@@ -35,6 +40,7 @@ export declare class Canvas {
         height: number;
     };
     get center(): Point;
-    get ratio(): number;
+    private get ratio();
+    get gameRatio(): number;
 }
 export {};

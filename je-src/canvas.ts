@@ -1,6 +1,6 @@
 import { Instance } from "./instance.js";
 import { images } from "./images.js";
-import { Point } from "./math.js";
+import { GameMath, Point } from "./math.js";
 import { Mouse } from "./mouse.js";
 import { Keyboard } from "./keyboard.js";
 
@@ -10,30 +10,17 @@ type CanvasOtherOptions = {
     ratio: boolean
 }
 
-type CanvasResolution = {
-    width: number,
-    height: number
-}
-
-/*
-
-// fullscreen
-
 type CanvasScreenOptions = {
     width: number,
     height: number,
     fullscreen?: false
-} & CanvasOtherOptions;
+};
 
 type CanvasFullscreenOptions = {
     fullscreen: true
-} & CanvasOtherOptions;
+};
 
-export type CanvasOptions = CanvasScreenOptions | CanvasFullscreenOptions;
-
-*/
-
-export type CanvasOptions = CanvasResolution & CanvasOtherOptions;
+export type CanvasOptions<Options = CanvasOtherOptions> = (CanvasScreenOptions | CanvasFullscreenOptions) & Options;
 
 export const getCanvasInstance = () => {
     if (!Canvas.instance) {
@@ -52,13 +39,14 @@ export class Canvas {
     backgroundColor = 'rgb(30, 30, 30)';
     options: CanvasOptions;
 
-    constructor(options: CanvasResolution & Partial<CanvasOtherOptions> = { width: 1366, height: 768 }) {
+    constructor(options: CanvasOptions<Partial<CanvasOtherOptions>> = { width: 1366, height: 768 }) {
         if (!Canvas.instance) Canvas.instance = this;
         else throw new Error('Canvas instance already exists, use getCanvasInstance() instead of new Canvas().')
 
         options.ratio ??= true;
         options.smooth ??= false;
         options.render ??= 'auto';
+        options.fullscreen ??= false;
 
         this.options = options as CanvasOptions;
 
@@ -66,9 +54,6 @@ export class Canvas {
 
         if (!this.tag)
             throw new Error('Canvas not found');
-
-        this.tag.width = this.options.width * this.ratio;
-        this.tag.height = this.options.height * this.ratio;
 
         this.ctx = this.tag.getContext('2d') as CanvasRenderingContext2D;
 
@@ -89,6 +74,13 @@ export class Canvas {
     }
 
     private resizeWindow() {
+        if (this.options.fullscreen) {
+            this.tag.style.width = `${window.innerWidth}px`;
+            this.tag.style.height = `${window.innerHeight}px`;
+            this.tag.width = window.innerWidth * this.ratio;
+            this.tag.height = window.innerHeight * this.ratio;
+            return;
+        }
         const { width, height } = this.realSize;
         this.tag.width = this.options.width * this.ratio;
         this.tag.height = this.options.height * this.ratio;
@@ -150,6 +142,10 @@ export class Canvas {
         this.instances.push(instance);
     }
 
+    get isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent);
+    }
+
     get width() {
         return this.tag.width / this.ratio;
     }
@@ -160,8 +156,8 @@ export class Canvas {
 
     get realSize() {
         return {
-            width: this.ratio ? this.tag.width / this.ratio : this.tag.width,
-            height: this.ratio ? this.tag.height / this.ratio : this.tag.height
+            width: this.tag.width / this.ratio,
+            height: this.tag.height / this.ratio
         };
     }
 
@@ -169,7 +165,12 @@ export class Canvas {
         return new Point(this.width / 2, this.height / 2);
     }
 
-    get ratio() {
+    private get ratio() {
         return this.options.ratio ? window.devicePixelRatio : 1;
+    }
+
+    get gameRatio() {
+        const { realSize } = this;
+        return Math.min(realSize.width / realSize.height, realSize.height / realSize.width);
     }
 }
