@@ -55,6 +55,11 @@ export class Canvas {
         if (!this.tag)
             throw new Error('Canvas not found');
 
+        if (!this.options.fullscreen) {
+            this.tag.width = this.options.width * this.ratio;
+            this.tag.height = this.options.height * this.ratio;
+        }
+
         this.ctx = this.tag.getContext('2d') as CanvasRenderingContext2D;
 
         if (!this.ctx)
@@ -74,6 +79,7 @@ export class Canvas {
     }
 
     private resizeWindow() {
+        console.log('update');
         if (this.options.fullscreen) {
             this.tag.style.width = `${window.innerWidth}px`;
             this.tag.style.height = `${window.innerHeight}px`;
@@ -140,10 +146,6 @@ export class Canvas {
 
     add(instance: Instance) {
         this.instances.push(instance);
-    }
-
-    get isMobile() {
-        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent);
     }
 
     get width() {

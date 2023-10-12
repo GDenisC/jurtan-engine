@@ -32,7 +32,6 @@ export declare class Canvas {
     runAsync(): Promise<void>;
     start(): void;
     add(instance: Instance): void;
-    get isMobile(): boolean;
     get width(): number;
     get height(): number;
     get realSize(): {
