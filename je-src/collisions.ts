@@ -4,16 +4,16 @@ import { Circle, Point, Rect } from "./math.js";
 export const Collisions = {
     pointToPoint: (a: Point, b: Point) => a.x == b.x && a.y == b.y,
     pointToRect: (a: Point, b: Rect, addSize = false, debug = false) => {
-        if (addSize) {
-            b.x += b.width;
-            b.y += b.height;
-        }
         if (debug) {
             const { ctx } = getCanvasInstance();
             ctx.strokeStyle = 'rgb(255, 0, 0)';
-            ctx.strokeRect(a.x, a.y, 10, 10);
+            ctx.strokeRect(a.x, a.y, 4, 4);
             ctx.strokeStyle = 'rgb(0, 255, 0)';
             ctx.strokeRect(b.x, b.y, b.width, b.height);
+        }
+        if (addSize) {
+            b.x += b.width;
+            b.y += b.height;
         }
         return a.x <= b.x && b.x <= a.x + b.width && a.y <= b.y && b.y <= a.y + b.height;
     },

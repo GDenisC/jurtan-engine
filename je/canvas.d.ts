@@ -39,7 +39,7 @@ export declare class Canvas {
         height: number;
     };
     get center(): Point;
-    private get ratio();
+    get ratio(): number;
     get gameRatio(): number;
 }
 export {};

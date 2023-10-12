@@ -166,7 +166,7 @@ export class Canvas {
         return new Point(this.width / 2, this.height / 2);
     }
 
-    private get ratio() {
+    get ratio() {
         return this.options.ratio ? window.devicePixelRatio : 1;
     }
 
