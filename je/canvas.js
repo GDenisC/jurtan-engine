@@ -53,7 +53,6 @@ export class Canvas {
         this.ctx.imageSmoothingEnabled = this.options.smooth;
     }
     resizeWindow() {
-        console.log('update');
         if (this.options.fullscreen) {
             this.tag.style.width = `${window.innerWidth}px`;
             this.tag.style.height = `${window.innerHeight}px`;
