@@ -6,6 +6,7 @@ export declare const Mouse: {
     isPressed(button: number): boolean;
     isClicked(button: number): boolean;
     update(): void;
+    isInCanvas(): boolean;
     readonly canvas: Canvas;
     on(event: 'mouseDown', listener: (e: MouseEvent) => any): void;
     on(event: 'mouseUp', listener: (e: MouseEvent) => any): void;

@@ -54,6 +54,15 @@ export const Mouse = new class extends EventEmitter {
             }
         });
     }
+    isInCanvas() {
+        const rect = this.canvas.tag.getBoundingClientRect();
+        const ratio = [
+            this.canvas.width / rect.width,
+            this.canvas.height / rect.height
+        ];
+        return this.position.x >= rect.left && this.position.y >= rect.top &&
+            this.position.x <= rect.width * ratio[0] && this.position.y <= rect.height * ratio[1];
+    }
     get canvas() {
         if (!canvasInstance)
             canvasInstance = getCanvasInstance();

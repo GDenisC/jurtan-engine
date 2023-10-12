@@ -16,7 +16,7 @@ export class Button extends Instance {
      * `super.onUpdate()` is required
      */
     onUpdate() {
-        if (!this.disabled && Collisions.pointToRect(Mouse.position, this.rect, true)) {
+        if (!this.disabled && Collisions.pointToRect(Mouse.position, this.rect, true) && Mouse.isInCanvas()) {
             if (this.hover != true) {
                 this.onOver();
                 this.hover = true;
