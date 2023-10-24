@@ -222,6 +222,12 @@ export abstract class Instance extends ChildrenArray<Instance> {
         return new Rect(...this.getDirection(pos.x, pos.y, width, height, direction), width, height);
     }
 
+    isChildOf(parentClass: FunctionConstructor): boolean {
+        if (this.parent == null) return false;
+        if (this.parent instanceof parentClass) return true;
+        return this.parent.isChildOf(parentClass);
+    }
+
     isClassOf(...instancesClasses: FunctionConstructor[]) {
         for (const cls of instancesClasses) {
             if (this instanceof cls)
