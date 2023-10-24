@@ -42,7 +42,8 @@ export abstract class Instance extends ChildrenArray<Instance> {
     onDraw() {}
 
     _update(ctx: CanvasRenderingContext2D) {
-        const updateChildren = () => this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
+        const children = [...this.children]; // copy array
+        const updateChildren = () => children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
         ctx.save();
         this.onUpdate();
         if (!this.dontTranslate) ctx.translate(this.x, this.y);
@@ -217,7 +218,11 @@ export abstract class Instance extends ChildrenArray<Instance> {
     destroy(cleanup = true) {
         this.onDestroy();
         if (cleanup) this.children.forEach(child => child.destroy());
-        this.canvas.instances.splice(this.canvas.instances.indexOf(this), 1);
+        if (this.parent == null) {
+            this.canvas.instances.splice(this.canvas.instances.indexOf(this), 1);
+        } else {
+            this.parent.removeChild(this, false);
+        }
     }
 
     getRect(width: number, height: number, direction: DrawDirection = 'center') {

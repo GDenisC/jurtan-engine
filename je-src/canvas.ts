@@ -122,9 +122,10 @@ export class Canvas {
         ctx.scale(this.ratio, this.ratio);
         ctx.translate(this.camera.x, this.camera.y);
 
-        const sortedInstance = this.instances.sort((a, b) => a.depth - b.depth);
+        const sortedInstances = [...this.instances] // copy array
+                                    .sort((a, b) => a.depth - b.depth);
 
-        for (const instance of sortedInstance) {
+        for (const instance of sortedInstances) {
             instance._update(ctx);
         }
 
