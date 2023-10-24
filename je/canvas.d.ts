@@ -39,7 +39,16 @@ export declare class Canvas {
         height: number;
     };
     get center(): Point;
+    /**
+     * @description The ratio of the device (window)
+     */
     get ratio(): number;
-    get gameRatio(): number;
+    get widthRatio(): number;
+    get heightRatio(): number;
+    /**
+     * Note: this is a `fullscreen` feature
+     * @description The ratio of the window
+     */
+    get screenRatio(): number;
 }
 export {};

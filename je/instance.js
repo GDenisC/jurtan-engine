@@ -2,6 +2,7 @@ import { Point, Rect } from "./math.js";
 import { getCanvasInstance } from "./canvas.js";
 import { Color } from "./colors.js";
 import { ChildrenArray } from "./childrenArray.js";
+import { GameMath } from "./math.js";
 let lastInstanceId = 0;
 let canvasInstance = null;
 export class Instance extends ChildrenArray {
@@ -10,6 +11,10 @@ export class Instance extends ChildrenArray {
         this.firstUpdate = false;
         this.dontTranslate = false;
         this.drawChildBottom = true;
+        /**
+         * Note: dont affect to text
+         */
+        this.drawDirection = 'center';
         this.depth = 0;
         this.x = 0;
         this.y = 0;
@@ -23,13 +28,12 @@ export class Instance extends ChildrenArray {
     onUpdate() { }
     onDraw() { }
     _update(ctx) {
-        const updateChildren = () => this.children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
+        const children = [...this.children]; // copy array
+        const updateChildren = () => children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
         ctx.save();
         this.onUpdate();
         if (!this.dontTranslate)
             ctx.translate(this.x, this.y);
-        if (this.canvas.options.fullscreen)
-            ctx.scale(this.canvas.gameRatio, this.canvas.gameRatio);
         if (!this.firstUpdate) {
             this.onBegin();
             this.firstUpdate = true;
@@ -43,6 +47,15 @@ export class Instance extends ChildrenArray {
     }
     translate(x, y) {
         this.ctx.translate(x, y);
+    }
+    rotate(radians) {
+        this.ctx.rotate(radians);
+    }
+    rotateAngle(angle) {
+        this.rotate(GameMath.toRadians(angle));
+    }
+    scale(x, y) {
+        this.ctx.scale(x, y);
     }
     save() {
         this.ctx.save();
@@ -74,9 +87,28 @@ export class Instance extends ChildrenArray {
     set font(font) {
         this.ctx.font = font;
     }
+    getDirection(x, y, w, h, direction = this.drawDirection) {
+        const dir = {
+            'top-left': [x, y],
+            'top': [x + w / 2, y],
+            'top-right': [x + w, y],
+            'left': [x, y + h / 2],
+            'center': [x + w / 2, y + h / 2],
+            'right': [x + w, y + h / 2],
+            'bottom-left': [x, y + h],
+            'bottom': [x + w / 2, y + h],
+            'bottom-right': [x + w, y + h],
+        };
+        return dir[direction];
+    }
     rectangle(x, y, width, height) {
         this.ctx.beginPath();
-        this.ctx.rect(x - width / 2, y - height / 2, width, height);
+        this.ctx.rect(...this.getDirection(x, y, width, height), width, height);
+        this.ctx.closePath();
+    }
+    roundRect(x, y, width, height, radius) {
+        this.ctx.beginPath();
+        this.ctx.roundRect(...this.getDirection(x, y, width, height), width, height, radius);
         this.ctx.closePath();
     }
     circle(x, y, radius) {
@@ -93,11 +125,11 @@ export class Instance extends ChildrenArray {
         if (closePath)
             this.ctx.closePath();
     }
-    polygon(angles, { scale, rotation }) {
+    polygon(angles, { scale, radians }) {
         scale !== null && scale !== void 0 ? scale : (scale = 1);
-        rotation !== null && rotation !== void 0 ? rotation : (rotation = 0);
+        radians !== null && radians !== void 0 ? radians : (radians = 0);
         const theta = 2 * Math.PI / angles;
-        this.path(Array.from({ length: angles }, (_, i) => new Point(Math.cos(i * theta + rotation / 180 * Math.PI) * scale, Math.sin(i * theta + rotation / 180 * Math.PI) * scale)));
+        this.path(Array.from({ length: angles }, (_, i) => new Point(Math.cos(i * theta + radians / 180 * Math.PI) * scale, Math.sin(i * theta + radians / 180 * Math.PI) * scale)));
     }
     fill(color) {
         if (color)
@@ -128,7 +160,7 @@ export class Instance extends ChildrenArray {
         this.ctx.strokeText(text.join(' '), x, y);
     }
     drawImage(image, x, y, width, height) {
-        this.ctx.drawImage(image, x - width / 2, y - height / 2, width, height);
+        this.ctx.drawImage(image, ...this.getDirection(x, y, width, height), width, height);
     }
     /**
      * @param value Alpha value from 0 to 1 (decimal).
@@ -143,11 +175,23 @@ export class Instance extends ChildrenArray {
         this.onDestroy();
         if (cleanup)
             this.children.forEach(child => child.destroy());
-        this.canvas.instances.splice(this.canvas.instances.indexOf(this), 1);
+        if (this.parent == null) {
+            this.canvas.instances.splice(this.canvas.instances.indexOf(this), 1);
+        }
+        else {
+            this.parent.removeChild(this, false);
+        }
     }
-    getRect(width, height) {
+    getRect(width, height, direction = 'center') {
         const { pos } = this;
-        return new Rect(pos.x - width / 2, pos.y - height / 2, width, height);
+        return new Rect(...this.getDirection(pos.x, pos.y, width, height, direction), width, height);
+    }
+    isChildOf(parentClass) {
+        if (this.parent == null)
+            return false;
+        if (this.parent instanceof parentClass)
+            return true;
+        return this.parent.isChildOf(parentClass);
     }
     isClassOf(...instancesClasses) {
         for (const cls of instancesClasses) {

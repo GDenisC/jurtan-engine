@@ -13,7 +13,6 @@ export class Grid extends Instance {
     drawGrid(translateCamera = true) {
         if (translateCamera)
             this.ctx.translate(-this.canvas.camera.x, -this.canvas.camera.y);
-        this.strokeColor = this.color;
         this.ctx.beginPath();
         for (let x = (this.canvas.width / 2 - this.x) % this.gridSize; x < this.canvas.width; x += this.gridSize) {
             this.ctx.moveTo(x, 0);
@@ -24,7 +23,7 @@ export class Grid extends Instance {
             this.ctx.lineTo(this.canvas.width, y);
         }
         this.ctx.closePath();
-        this.stroke();
+        this.stroke(this.color);
     }
 }
 //# sourceMappingURL=grid.js.map

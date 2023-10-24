@@ -18,6 +18,7 @@ export const mimeSet = {
 export class WebServer extends EventEmitter {
     constructor(directory = './dist') {
         super();
+        this.jsonParsing = true;
         this.sockets = [];
         this.wss = new WebSocketServer({ noServer: true });
         this.http = createServer((req, res) => {
@@ -34,11 +35,21 @@ export class WebServer extends EventEmitter {
             return createReadStream(path).pipe(res);
         });
     }
-    listen(port) {
+    listen(options) {
+        let port;
+        if (typeof options == 'number') {
+            port = options;
+        }
+        else {
+            port = options.port;
+            if (options.dontParse === true)
+                this.disableJsonParsing();
+        }
         this.http.on('upgrade', (req, socket, head) => {
             this.wss.handleUpgrade(req, socket, head, ws => {
                 this.sockets.push(ws);
-                ws.on('message', data => this.emit('message', JSON.parse(data.toString())));
+                ws.addEventListener('message', data => this.emit('socketMessage', ws, this.parse(data.toString())));
+                ws.on('message', data => this.emit('globalMessage', this.parse(data.toString())));
                 this.emit('connection', ws);
             });
         });
@@ -49,6 +60,12 @@ export class WebServer extends EventEmitter {
         if (socket.readyState == WebSocket.OPEN) {
             socket.close();
         }
+    }
+    disableJsonParsing() {
+        this.jsonParsing = false;
+    }
+    parse(data) {
+        return this.jsonParsing ? JSON.parse(data) : data;
     }
     on(event, listener) {
         super.on(event, listener);
