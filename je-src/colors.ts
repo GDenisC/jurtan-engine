@@ -42,5 +42,5 @@ export const Color = {
             a.b * (1 - t) + b.b * t
         );
     },
-    alpha: (c: ColorRGB, a: number) => Color.create(c.r, c.g, c.b, a),
+    alpha: (c: ColorRGB, a: number) => Color.create(c.r, c.g, c.b, a)
 } as const;
