@@ -18,7 +18,13 @@ export const mimeSet = {
     "ico": "image/x-icon"
 } as any;
 
+export type WebServerListenOptions = {
+    port: number,
+    dontParse?: boolean
+};
+
 export class WebServer<T extends WebSocket = WebSocket, Message = Record<string | symbol, any>> extends EventEmitter {
+    private jsonParsing = true;
     http: Server;
     wss: WebSocketServer;
     sockets: T[] = [];
@@ -42,11 +48,21 @@ export class WebServer<T extends WebSocket = WebSocket, Message = Record<string 
         });
     }
 
-    listen(port: number) {
+    listen(port: number): any;
+    listen(options: WebServerListenOptions): any;
+    listen(options: WebServerListenOptions | number) {
+        let port: number;
+        if (typeof options == 'number') {
+            port = options;
+        } else {
+            port = options.port;
+            if (options.dontParse === true) this.disableJsonParsing();
+        }
         this.http.on('upgrade', (req, socket, head) => {
             this.wss.handleUpgrade(req, socket, head, ws => {
                 this.sockets.push(ws as unknown as T);
-                ws.on('message', data => this.emit('message', JSON.parse(data.toString())));
+                ws.addEventListener('message', data => this.emit('socketMessage', ws, this.parse(data.toString())));
+                ws.on('message', data => this.emit('globalMessage', this.parse(data.toString())));
                 this.emit('connection', ws);
             });
         });
@@ -60,7 +76,16 @@ export class WebServer<T extends WebSocket = WebSocket, Message = Record<string 
         }
     }
 
-    on(event: 'message', listener: (data: Message) => any): void;
+    disableJsonParsing() {
+        this.jsonParsing = false;
+    }
+
+    protected parse(data: string) {
+        return this.jsonParsing ? JSON.parse(data) : data;
+    }
+
+    on(event: 'socketMessage', listener: (socket: T, data: Message) => any): void;
+    on(event: 'globalMessage', listener: (data: Message) => any): void;
     on(event: 'connection', listener: (socket: T) => any): void;
     on(event: string, listener: (...args: any[]) => any) {
         super.on(event, listener);
