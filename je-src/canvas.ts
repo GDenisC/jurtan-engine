@@ -166,12 +166,28 @@ export class Canvas {
         return new Point(this.width / 2, this.height / 2);
     }
 
+    /**
+     * @description The ratio of the device (window)
+     */
     get ratio() {
         return this.options.ratio ? window.devicePixelRatio : 1;
     }
 
-    get gameRatio() {
+    get widthRatio() {
         const { realSize } = this;
-        return Math.min(realSize.width / realSize.height, realSize.height / realSize.width);
+        return realSize.width / realSize.height;
+    }
+
+    get heightRatio() {
+        const { realSize } = this;
+        return realSize.height / realSize.width;
+    }
+
+    /**
+     * Note: this is a `fullscreen` feature
+     * @description The ratio of the window
+     */
+    get screenRatio() {
+        return Math.min(this.widthRatio, this.heightRatio);
     }
 }

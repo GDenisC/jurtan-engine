@@ -39,7 +39,6 @@ export abstract class Instance extends ChildrenArray<Instance> {
         ctx.save();
         this.onUpdate();
         if (!this.dontTranslate) ctx.translate(this.x, this.y);
-        if (this.canvas.options.fullscreen) ctx.scale(this.canvas.gameRatio, this.canvas.gameRatio);
         if (!this.firstUpdate) {
             this.onBegin();
             this.firstUpdate = true;
