@@ -151,14 +151,14 @@ export abstract class Instance extends ChildrenArray<Instance> {
         if (closePath) this.ctx.closePath();
     }
 
-    polygon(angles: number, { scale, rotation }: Partial<{ scale: number, rotation: number }>) {
+    polygon(angles: number, { scale, radians }: Partial<{ scale: number, radians: Radians }>) {
         scale ??= 1;
-        rotation ??= 0;
+        radians ??= 0;
         const theta = 2 * Math.PI / angles;
         this.path(
             Array.from({ length: angles }, (_, i) => new Point(
-                Math.cos(i * theta + (rotation as number) / 180 * Math.PI) * (scale as number),
-                Math.sin(i * theta + (rotation as number) / 180 * Math.PI) * (scale as number)
+                Math.cos(i * theta + (radians as number) / 180 * Math.PI) * (scale as number),
+                Math.sin(i * theta + (radians as number) / 180 * Math.PI) * (scale as number)
             ))
         );
     }
