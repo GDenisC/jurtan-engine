@@ -26,6 +26,6 @@ export const Color = {
             return b;
         return Color.create(a.r * (1 - t) + b.r * t, a.g * (1 - t) + b.g * t, a.b * (1 - t) + b.b * t);
     },
-    alpha: (c, a) => Color.create(c.r, c.g, c.b, a),
+    alpha: (c, a) => Color.create(c.r, c.g, c.b, a)
 };
 //# sourceMappingURL=colors.js.map

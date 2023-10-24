@@ -48,6 +48,8 @@ export declare const GameMath: {
     readonly towardsRadians: (radians: Radians) => Point;
     readonly towards: (angle: Angle) => Point;
     readonly random: (min: number, max: number) => number;
+    readonly randomFloor: (min: number, max: number) => number;
+    readonly randomElement: <T>(arr: T[]) => T;
     readonly sign: (x: number) => 0 | 1 | -1;
     readonly lerp: (a: number, b: number, t: number) => number;
     readonly clamp: (a: number, min: number, max: number) => number;

@@ -102,8 +102,10 @@ export const GameMath = {
     towards: (angle) => GameMath.towardsRadians(GameMath.toRadians(angle)),
     // other
     random: (min, max) => Math.random() * (max - min) + min,
+    randomFloor: (min, max) => Math.floor(GameMath.random(min, max)),
+    randomElement: (arr) => arr[GameMath.randomFloor(0, arr.length - 1)],
     sign: (x) => x > 0 ? 1 : x < 0 ? -1 : 0,
     lerp: (a, b, t) => a * (1 - t) + b * t,
-    clamp: (a, min, max) => Math.min(Math.max(a, min), max),
+    clamp: (a, min, max) => Math.min(Math.max(a, min), max)
 };
 //# sourceMappingURL=math.js.map
