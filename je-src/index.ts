@@ -8,7 +8,7 @@ export { Color } from './colors.js';
 
 export { Keyboard } from './keyboard.js';
 
-export type { Rectable } from './instance.js';
+export type { Rectable, DrawDirection } from './instance.js';
 export { Instance } from './instance.js';
 export { Scene } from './scene.js';
 export { ImageInstance, Image9Instance } from './images.js'

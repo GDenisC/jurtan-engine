@@ -11,10 +11,13 @@ export interface Rectable {
     get rect(): Rect;
 }
 
+export type DrawDirection = 'top-left' | 'top' | 'top-right' | 'left' | 'center' | 'right' | 'bottom-left' | 'bottom' | 'bottom-right';
+
 export abstract class Instance extends ChildrenArray<Instance> {
     private firstUpdate = false;
     protected dontTranslate = false;
     protected drawChildBottom = true;
+    drawDirection: DrawDirection = 'center';
     index: number;
     depth = 0;
     x = 0;
@@ -106,9 +109,30 @@ export abstract class Instance extends ChildrenArray<Instance> {
         this.ctx.font = font;
     }
 
+    protected getDirection(x: number, y: number, w: number, h: number, direction: DrawDirection = this.drawDirection) {
+        const dir: Record<DrawDirection, [number, number]> = {
+            'top-left': [x, y],
+            'top': [x + w / 2, y],
+            'top-right': [x + w, y],
+            'left': [x, y + h / 2],
+            'center': [x + w / 2, y + h / 2],
+            'right': [x + w, y + h / 2],
+            'bottom-left': [x, y + h],
+            'bottom': [x + w / 2, y + h],
+            'bottom-right': [x + w, y + h],
+        };
+        return dir[direction];
+    }
+
     rectangle(x: number, y: number, width: number, height: number) {
         this.ctx.beginPath();
-        this.ctx.rect(x - width / 2, y - height / 2, width, height);
+        this.ctx.rect(...this.getDirection(x, y, width, height), width, height);
+        this.ctx.closePath();
+    }
+
+    roundRect(x: number, y: number, width: number, height: number, radius: number) {
+        this.ctx.beginPath();
+        this.ctx.roundRect(...this.getDirection(x, y, width, height), width, height, radius);
         this.ctx.closePath();
     }
 
@@ -173,7 +197,7 @@ export abstract class Instance extends ChildrenArray<Instance> {
     }
 
     drawImage(image: HTMLImageElement, x: number, y: number, width: number, height: number) {
-        this.ctx.drawImage(image, x - width / 2,  y - height / 2, width, height);
+        this.ctx.drawImage(image, ...this.getDirection(x, y, width, height), width, height);
     }
 
     /**
@@ -193,9 +217,9 @@ export abstract class Instance extends ChildrenArray<Instance> {
         this.canvas.instances.splice(this.canvas.instances.indexOf(this), 1);
     }
 
-    getRect(width: number, height: number) {
+    getRect(width: number, height: number, direction: DrawDirection = 'center') {
         const { pos } = this;
-        return new Rect(pos.x - width / 2, pos.y - height / 2, width, height);
+        return new Rect(...this.getDirection(pos.x, pos.y, width, height, direction), width, height);
     }
 
     isClassOf(...instancesClasses: FunctionConstructor[]) {
