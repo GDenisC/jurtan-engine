@@ -126,7 +126,9 @@ export const GameMath = {
 
     // other
     random: (min: number, max: number) => Math.random() * (max - min) + min,
+    randomFloor: (min: number, max: number) => Math.floor(GameMath.random(min, max)),
+    randomElement: <T>(arr: T[]) => arr[GameMath.randomFloor(0, arr.length - 1)],
     sign: (x: number) => x > 0 ? 1 : x < 0 ? -1 : 0,
     lerp: (a: number, b: number, t: number) => a * (1 - t) + b * t,
-    clamp: (a: number, min: number, max: number) => Math.min(Math.max(a, min), max),
+    clamp: (a: number, min: number, max: number) => Math.min(Math.max(a, min), max)
 } as const;
