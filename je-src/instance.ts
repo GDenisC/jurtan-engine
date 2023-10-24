@@ -2,6 +2,7 @@ import { Point, Rect } from "./math.js";
 import { Canvas, getCanvasInstance } from "./canvas.js";
 import { AnyColor, Color } from "./colors.js";
 import { ChildrenArray } from "./childrenArray.js";
+import { GameMath, Radians, Angle } from "./math.js";
 
 let lastInstanceId = 0;
 let canvasInstance: Canvas | null = null;
@@ -51,6 +52,18 @@ export abstract class Instance extends ChildrenArray<Instance> {
 
     translate(x: number, y: number) {
         this.ctx.translate(x, y);
+    }
+
+    rotate(radians: Radians) {
+        this.ctx.rotate(radians);
+    }
+
+    rotateAngle(angle: Angle) {
+        this.rotate(GameMath.toRadians(angle));
+    }
+
+    scale(x: number, y: number) {
+        this.ctx.scale(x, y);
     }
 
     save() {
