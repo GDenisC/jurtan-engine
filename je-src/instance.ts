@@ -17,6 +17,9 @@ export abstract class Instance extends ChildrenArray<Instance> {
     private firstUpdate = false;
     protected dontTranslate = false;
     protected drawChildBottom = true;
+    /**
+     * Note: dont affect to text
+     */
     drawDirection: DrawDirection = 'center';
     index: number;
     depth = 0;
