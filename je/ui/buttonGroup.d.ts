@@ -1,4 +1,4 @@
-import { Instance } from "../instance.js";
+import { Instance } from "../instances";
 export declare class ButtonGroup extends Instance {
     protected _disabled: boolean;
     constructor();

@@ -1,4 +1,4 @@
-import { Instance, Rectable } from "../instance.js";
+import { Instance, Rectable } from "../instances";
 export declare class Button extends Instance implements Rectable {
     width: number;
     height: number;
@@ -10,7 +10,7 @@ export declare class Button extends Instance implements Rectable {
      * `super.onUpdate()` is required
      */
     onUpdate(): void;
-    get rect(): any;
+    get rect(): import("../math.js").Rect;
     onOver(): void;
     onOut(): void;
     onClick(): void;

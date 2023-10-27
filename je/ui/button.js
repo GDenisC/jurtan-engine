@@ -1,5 +1,5 @@
 import { Collisions } from "../collisions.js";
-import { Instance } from "../instance.js";
+import { Instance } from "../instances";
 import { Mouse } from "../mouse.js";
 export class Button extends Instance {
     constructor(x, y, width, height) {

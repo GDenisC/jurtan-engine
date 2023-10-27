@@ -1,5 +1,5 @@
 import { Collisions } from "../collisions.js";
-import { Instance, Rectable } from "../instance.js";
+import { Instance, Rectable } from "../instances";
 import { Mouse } from "../mouse.js";
 
 export class Button extends Instance implements Rectable {
