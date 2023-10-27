@@ -1,8 +1,5 @@
 import { getInstances } from "./canvas.js";
 import { Collisions } from "./collisions.js";
-import { Game } from "./game.js";
-import { ImageInstance } from "./images.js";
-import { Instance } from "./instance.js";
 
 export interface Copyable<T> {
     copy(): T;
@@ -79,17 +76,31 @@ export class Rect extends Point implements Copyable<Rect> {
         return new Point(this.x + this.width / 2, this.y + this.height / 2);
     }
 
-    collide(instance: Instance, rect: Rect, xs: number, ys: number, subPos = false) {
-        const collision = Collisions.checkCollision(this, rect, xs, ys, { subPos });
-        Game.other = instance;
-        return collision;
+    get minX() {
+        return this.x;
+    }
+
+    get maxX() {
+        return this.x + this.width;
+    }
+
+    get minY() {
+        return this.y;
+    }
+
+    get maxY() {
+        return this.y + this.height;
+    }
+
+    collide(rect: Rect, xs: number, ys: number) {
+        return Collisions.checkCollision(this, rect, xs, ys);
     }
 
     collideWithType(type: FunctionConstructor, xs: number, ys: number) {
         for (const instance of getInstances()) {
             const rect = instance as any['rect'];
             if (rect != null && rect != this && instance instanceof type) {
-                if (this.collide(instance, rect, xs, ys, !(instance instanceof ImageInstance)))
+                if (this.collide(rect, xs, ys))
                     return true;
             }
         }
@@ -100,7 +111,7 @@ export class Rect extends Point implements Copyable<Rect> {
         for (const instance of getInstances()) {
             const rect = instance as any['rect'];
             if (rect != null && rect != this && type.some(t => instance instanceof t)) {
-                if (this.collide(instance, rect, xs, ys, !(instance instanceof ImageInstance)))
+                if (this.collide(rect, xs, ys))
                     return true;
             }
         }

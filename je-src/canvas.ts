@@ -1,6 +1,5 @@
-import { Instance } from "./instance.js";
-import { images } from "./images.js";
-import { GameMath, Point } from "./math.js";
+import { Instance } from "./instances";
+import { Point } from "./math.js";
 import { Mouse } from "./mouse.js";
 import { Keyboard } from "./keyboard.js";
 
@@ -38,6 +37,7 @@ export class Canvas {
     camera: Point;
     backgroundColor = 'rgb(30, 30, 30)';
     options: CanvasOptions;
+    imagesToLoad: HTMLImageElement[] = [];
 
     constructor(options: CanvasOptions<Partial<CanvasOtherOptions>> = { width: 1366, height: 768 }) {
         if (!Canvas.instance) Canvas.instance = this;
@@ -95,14 +95,24 @@ export class Canvas {
         this.tag.style.left = `${window.innerWidth / 2 - width / 2}px`;
     }
 
+    loadImage(src: string) {
+        const image = this.imagesToLoad.find(i => i.id == src);
+        if (image) return image;
+        const img = new Image();
+        img.src = src;
+        img.id = src;
+        this.imagesToLoad.push(img);
+        return img;
+    }
+
     loadAllImages(): Promise<HTMLImageElement[]> {
         return new Promise(resolve => {
-            Promise.all(images.map(i => {
+            Promise.all(this.imagesToLoad.map(i => {
                 if (!i.complete) {
                     return new Promise((resolve, reject) => {
                         console.log('Loading image', i.src);
-                        i.onload = () => resolve(i);
-                        i.onerror = () => reject(i);
+                        i.addEventListener('load', resolve);
+                        i.addEventListener('error', reject);
                     })
                 }
                 return null;

@@ -1,4 +1,4 @@
-import { Instance } from "./instance.js";
+import { Instance } from "./instances";
 import { Point } from "./math.js";
 type CanvasOtherOptions = {
     render: 'pixelated' | 'crisp-edges' | 'auto';
@@ -24,9 +24,11 @@ export declare class Canvas {
     camera: Point;
     backgroundColor: string;
     options: CanvasOptions;
+    imagesToLoad: HTMLImageElement[];
     constructor(options?: CanvasOptions<Partial<CanvasOtherOptions>>);
     private init;
     private resizeWindow;
+    loadImage(src: string): HTMLImageElement;
     loadAllImages(): Promise<HTMLImageElement[]>;
     renderLoop(): void;
     runAsync(): Promise<void>;

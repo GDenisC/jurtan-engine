@@ -1,7 +1,5 @@
 import { getInstances } from "./canvas.js";
 import { Collisions } from "./collisions.js";
-import { Game } from "./game.js";
-import { ImageInstance } from "./images.js";
 export class Point {
     constructor(x = 0, y = 0) {
         this.x = x;
@@ -64,16 +62,26 @@ export class Rect extends Point {
     get bottomRight() {
         return new Point(this.x + this.width / 2, this.y + this.height / 2);
     }
-    collide(instance, rect, xs, ys, subPos = false) {
-        const collision = Collisions.checkCollision(this, rect, xs, ys, { subPos });
-        Game.other = instance;
-        return collision;
+    get minX() {
+        return this.x;
+    }
+    get maxX() {
+        return this.x + this.width;
+    }
+    get minY() {
+        return this.y;
+    }
+    get maxY() {
+        return this.y + this.height;
+    }
+    collide(rect, xs, ys) {
+        return Collisions.checkCollision(this, rect, xs, ys);
     }
     collideWithType(type, xs, ys) {
         for (const instance of getInstances()) {
             const rect = instance;
             if (rect != null && rect != this && instance instanceof type) {
-                if (this.collide(instance, rect, xs, ys, !(instance instanceof ImageInstance)))
+                if (this.collide(rect, xs, ys))
                     return true;
             }
         }
@@ -83,7 +91,7 @@ export class Rect extends Point {
         for (const instance of getInstances()) {
             const rect = instance;
             if (rect != null && rect != this && type.some(t => instance instanceof t)) {
-                if (this.collide(instance, rect, xs, ys, !(instance instanceof ImageInstance)))
+                if (this.collide(rect, xs, ys))
                     return true;
             }
         }

@@ -1,4 +1,4 @@
-import { Instance } from "./instance.js";
+import { Instance } from "./instances";
 export class ChildrenArray {
     constructor() {
         this._parent = null;

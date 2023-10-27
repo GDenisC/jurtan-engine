@@ -1,5 +1,5 @@
 import { Color } from "./colors.js";
-import { Instance } from "./instance.js";
+import { Instance } from "./instances";
 export class Grid extends Instance {
     constructor(gridSize = 30, color = Color.create(0, 0, 0, 0.1)) {
         super();

@@ -1,14 +1,12 @@
-export { Canvas, getCanvasInstance, getInstances } from './canvas.js';
-export { GameMath, Point, Rect } from './math.js';
-export { Color } from './colors.js';
-export { Keyboard } from './keyboard.js';
-export { Instance } from './instance.js';
-export { Scene } from './scene.js';
-export { ImageInstance, Image9Instance } from './images.js';
-export { Grid } from './grid.js';
-export { Game } from './game.js';
-export { Collisions } from './collisions.js';
-export { Mouse } from './mouse.js';
-export { Mobile } from './mobile.js';
+export { Canvas, getCanvasInstance, getInstances } from './canvas';
+export { GameMath, Point, Rect } from './math';
+export { Color } from './colors';
+export { Keyboard } from './keyboard';
+//export type { Rectable, DrawDirection } from './instances';
+export * from './instances';
+export { Grid } from './grid';
+export { Collisions } from './collisions';
+export { Mouse } from './mouse';
+export { Mobile } from './mobile';
 // TODO: export { Sound } from './sounds.js';
 //# sourceMappingURL=index.js.map

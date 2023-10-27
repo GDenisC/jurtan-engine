@@ -1,4 +1,4 @@
-import { Instance } from "./instance.js";
+import { Instance } from "./instances";
 
 export class ChildrenArray<T extends ChildrenArray<T>> {
     private _parent: T | null = null;

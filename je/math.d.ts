@@ -1,4 +1,3 @@
-import { Instance } from "./instance.js";
 export interface Copyable<T> {
     copy(): T;
 }
@@ -34,7 +33,11 @@ export declare class Rect extends Point implements Copyable<Rect> {
     get bottomLeft(): Point;
     get bottom(): Point;
     get bottomRight(): Point;
-    collide(instance: Instance, rect: Rect, xs: number, ys: number, subPos?: boolean): boolean;
+    get minX(): number;
+    get maxX(): number;
+    get minY(): number;
+    get maxY(): number;
+    collide(rect: Rect, xs: number, ys: number): boolean;
     collideWithType(type: FunctionConstructor, xs: number, ys: number): boolean;
     collideWithTypes(type: FunctionConstructor[], xs: number, ys: number): boolean;
 }

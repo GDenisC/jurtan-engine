@@ -1,1 +1,0 @@
-{"version":3,"file":"game.js","sourceRoot":"je-src/","sources":["game.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,MAAM,IAAI,GAAG,IAAI;IAAA;QACpB,UAAK,GAAoB,IAAI,CAAC;IAClC,CAAC;CAAA,CAAC","sourcesContent":["import { Instance } from \"./instance.js\";\n\nexport const Game = new class {\n    other: Instance | null = null;\n};"]}

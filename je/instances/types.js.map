@@ -1,0 +1,1 @@
+{"version":3,"file":"types.js","sourceRoot":"je-src/","sources":["instances/types.ts"],"names":[],"mappings":"","sourcesContent":["import { Rect } from \"../math.js\";\r\n\r\nexport interface Rectable {\r\n    get rect(): Rect;\r\n}\r\n\r\nexport type DrawDirection = 'top-left' | 'top' | 'top-right' | 'left' | 'center' | 'right' | 'bottom-left' | 'bottom' | 'bottom-right';"]}

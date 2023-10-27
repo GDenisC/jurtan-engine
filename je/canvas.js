@@ -7,7 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { images } from "./images.js";
 import { Point } from "./math.js";
 import { Mouse } from "./mouse.js";
 import { Keyboard } from "./keyboard.js";
@@ -23,6 +22,7 @@ export class Canvas {
         var _a, _b, _c, _d;
         this.instances = [];
         this.backgroundColor = 'rgb(30, 30, 30)';
+        this.imagesToLoad = [];
         if (!Canvas.instance)
             Canvas.instance = this;
         else
@@ -68,14 +68,24 @@ export class Canvas {
         this.tag.style.top = `${window.innerHeight / 2 - height / 2}px`;
         this.tag.style.left = `${window.innerWidth / 2 - width / 2}px`;
     }
+    loadImage(src) {
+        const image = this.imagesToLoad.find(i => i.id == src);
+        if (image)
+            return image;
+        const img = new Image();
+        img.src = src;
+        img.id = src;
+        this.imagesToLoad.push(img);
+        return img;
+    }
     loadAllImages() {
         return new Promise(resolve => {
-            Promise.all(images.map(i => {
+            Promise.all(this.imagesToLoad.map(i => {
                 if (!i.complete) {
                     return new Promise((resolve, reject) => {
                         console.log('Loading image', i.src);
-                        i.onload = () => resolve(i);
-                        i.onerror = () => reject(i);
+                        i.addEventListener('load', resolve);
+                        i.addEventListener('error', reject);
                     });
                 }
                 return null;

@@ -1,4 +1,4 @@
-/// <reference types="node" resolution-mode="require"/>
+/// <reference types="node" />
 import { Server } from 'http';
 import { WebSocket, WebSocketServer } from 'ws';
 import { EventEmitter } from '../eventEmitter.js';

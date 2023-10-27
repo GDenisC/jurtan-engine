@@ -17,33 +17,26 @@ export const Collisions = {
         }
         return a.x <= b.x && b.x <= a.x + b.width && a.y <= b.y && b.y <= a.y + b.height;
     },
-    checkCollision: (a: Rect, b: Rect, xs: number, ys: number, options: { subPos?: boolean, debug?: boolean }) => {
-        const { subPos, debug } = options;
-        let { x: x2, y: y2 } = b;
-        if (subPos) {
-            x2 -= b.width / 2;
-            y2 -= b.height / 2;
-        }
+    checkCollision: (a: Rect, b: Rect, xs: number, ys: number, debug: boolean = false) => {
         if (debug) {
             const { ctx } = getCanvasInstance();
             ctx.strokeStyle = 'rgb(0, 0, 255)';
             ctx.strokeRect(a.x, a.y, a.width, a.height);
             ctx.strokeStyle = 'rgb(255, 0, 0)';
-            ctx.strokeRect(x2, y2, b.width, b.height);
+            ctx.strokeRect(b.x, b.y, b.width, b.height);
         }
-        let { x, y } = a;
-        x += xs;
-        y += ys;
+        a.x += xs;
+        a.y += ys;
         if (debug) {
             const { ctx } = getCanvasInstance();
             ctx.strokeStyle = 'rgb(0, 255, 0)';
-            ctx.strokeRect(x, y, a.width, a.height);
+            ctx.strokeRect(a.x, a.y, a.width, a.height);
         }
         return (
-            x + a.width  >= x2           &&
-            x            <= x2 + b.width &&
-            y + a.height >= y2           &&
-            y            <= y2 + b.height
+            a.maxX >= b.minX &&
+            a.minX <= b.maxX &&
+            a.maxY >= b.minY &&
+            a.minY <= b.maxY
         );
     },
     circleToCircle: (a: Circle, b: Circle) => Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2) <= a.radius + b.radius

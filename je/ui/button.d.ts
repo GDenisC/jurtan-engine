@@ -10,7 +10,7 @@ export declare class Button extends Instance implements Rectable {
      * `super.onUpdate()` is required
      */
     onUpdate(): void;
-    get rect(): import("../math.js").Rect;
+    get rect(): any;
     onOver(): void;
     onOut(): void;
     onClick(): void;

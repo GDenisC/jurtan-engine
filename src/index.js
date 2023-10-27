@@ -1,3 +1,9 @@
+// remove import and uncomment code if u want code on it
+
+import '../tests/modules-test';
+
+/*
+
 import { Canvas } from '../je';
 
 const cv = new Canvas({
@@ -6,3 +12,4 @@ const cv = new Canvas({
 });
 
 cv.start();
+*/
