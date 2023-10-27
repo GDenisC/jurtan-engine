@@ -1,4 +1,4 @@
-import { Canvas } from '../je/index.js';
+import { Canvas } from '../je';
 
 const cv = new Canvas({
     width: 1366,
