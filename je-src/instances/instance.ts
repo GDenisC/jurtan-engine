@@ -120,17 +120,16 @@ export abstract class Instance extends ChildrenArray<Instance> {
     protected getDirection(x: number, y: number, w: number, h: number, direction: DrawDirection = this.drawDirection) {
         const dir: Record<DrawDirection, [number, number]> = {
             'top-left': [x, y],
-            'top': [x + w / 2, y],
-            'top-right': [x + w, y],
-            'left': [x, y + h / 2],
-            'center': [x + w / 2, y + h / 2],
-            'right': [x + w, y + h / 2],
-            'bottom-left': [x, y + h],
-            'bottom': [x + w / 2, y + h],
-            'bottom-right': [x + w, y + h],
+            'top': [x - w / 2, y],
+            'top-right': [x - w, y],
+            'left': [x, y - h / 2],
+            'center': [x - w / 2, y - h / 2],
+            'right': [x - w, y - h / 2],
+            'bottom-left': [x, y - h],
+            'bottom': [x - w / 2, y - h],
+            'bottom-right': [x - w, y - h],
         };
-        const [a, b] = dir[direction];
-        return [a - w, b - h] as [number, number];
+        return dir[direction];
     }
 
     rectangle(x: number, y: number, width: number, height: number) {
