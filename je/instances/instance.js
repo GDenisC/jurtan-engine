@@ -96,17 +96,16 @@ export class Instance extends ChildrenArray {
     getDirection(x, y, w, h, direction = this.drawDirection) {
         const dir = {
             'top-left': [x, y],
-            'top': [x + w / 2, y],
-            'top-right': [x + w, y],
-            'left': [x, y + h / 2],
-            'center': [x + w / 2, y + h / 2],
-            'right': [x + w, y + h / 2],
-            'bottom-left': [x, y + h],
-            'bottom': [x + w / 2, y + h],
-            'bottom-right': [x + w, y + h],
+            'top': [x - w / 2, y],
+            'top-right': [x - w, y],
+            'left': [x, y - h / 2],
+            'center': [x - w / 2, y - h / 2],
+            'right': [x - w, y - h / 2],
+            'bottom-left': [x, y - h],
+            'bottom': [x - w / 2, y - h],
+            'bottom-right': [x - w, y - h],
         };
-        const [a, b] = dir[direction];
-        return [a - w, b - h];
+        return dir[direction];
     }
     rectangle(x, y, width, height) {
         this.ctx.beginPath();
