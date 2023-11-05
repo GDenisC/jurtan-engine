@@ -68,9 +68,9 @@ export const Mouse = new class extends EventEmitter {
         const ratio = [
             this.canvas.width / rect.width,
             this.canvas.height / rect.height
-        ]
-        return  this.position.x >= rect.left             && this.position.y >= rect.top &&
-                this.position.x <= rect.width * ratio[0] && this.position.y <= rect.height * ratio[1];
+        ];
+        return this.position.x >= 0                     && this.position.y >= 0 &&
+               this.position.x <= rect.width * ratio[0] && this.position.y <= rect.height * ratio[1];
     }
 
     get canvas() {
