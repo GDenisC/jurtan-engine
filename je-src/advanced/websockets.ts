@@ -8,12 +8,18 @@ export class Socket<MessageType = Record<string | symbol, any>> extends EventEmi
         super();
     }
 
-    connect() {
+    connect(): void;
+    connect(onConnect: (socket: Socket<MessageType>) => any): void;
+    connect(onConnect?: (socket: Socket<MessageType>) => any) {
         this.websocket = new WebSocket(this.url);
         this.websocket.addEventListener('open', () => this.emit('open', this));
         this.websocket.addEventListener('message', data => this.emit('message', this.parseJson ? JSON.parse(data.data) : data.data));
         this.websocket.addEventListener('close', () => this.emit('close'));
         this.websocket.addEventListener('error', error => this.emit('error', error));
+
+        if (onConnect) {
+            this.on('open', onConnect);
+        }
     }
 
     talk(data: MessageType) {

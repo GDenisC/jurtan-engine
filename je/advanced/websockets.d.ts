@@ -5,6 +5,7 @@ export declare class Socket<MessageType = Record<string | symbol, any>> extends 
     parseJson: boolean;
     constructor(url: string);
     connect(): void;
+    connect(onConnect: (socket: Socket<MessageType>) => any): void;
     talk(data: MessageType): void;
     on(event: 'close', listener: () => any): void;
     on(event: 'error', listener: (error: Error) => any): void;
