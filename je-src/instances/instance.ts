@@ -38,7 +38,9 @@ export abstract class Instance extends ChildrenArray<Instance> {
 
     onUpdate() {}
 
+    onBeforeDraw() {}
     onDraw() {}
+    onAfterDraw() {}
 
     _update(ctx: CanvasRenderingContext2D) {
         const children = [...this.children]; // copy array
@@ -51,7 +53,9 @@ export abstract class Instance extends ChildrenArray<Instance> {
             this.firstUpdate = true;
         }
         if (this.drawChildBottom) updateChildren();
+        this.onBeforeDraw();
         this.onDraw();
+        this.onAfterDraw();
         if (!this.drawChildBottom) updateChildren();
         ctx.restore();
     }

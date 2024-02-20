@@ -3,5 +3,5 @@ export { GameSaves, GameSave } from './gamesave.js';
 export { Crypt, CryptWriter, CryptReader } from './crypt.js';
 export { Request, Session } from './requests.js';
 export { Socket } from './websockets.js';
-// TODO: export { ParticleSpawner } from './particles.js';
+export { ParticleSpawner, Particle } from './particles.js';
 //# sourceMappingURL=index.js.map

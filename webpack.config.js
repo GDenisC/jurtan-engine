@@ -3,7 +3,10 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const bundle = true;
 
-export default {
+/**
+ * @type {import('webpack').Configuration}
+ */
+const config = {
     entry: './src/index.js',
     mode: 'development',
     module: {
@@ -14,21 +17,23 @@ export default {
                 exclude: /node_modules/
             },
             {
-                test: /\.js$/,
-                use: 'babel-loader',
-                exclude: /node_modules/,
+                test: /\.m?js/,
+                type: "javascript/auto",
+            },
+            {
+                test: /\.m?js/,
                 resolve: {
                     fullySpecified: false,
-                }
-            }
+                },
+            },
         ]
     },
     resolve: {
-        extensions: ['.ts', '.js'],
+        extensions: ['.ts', '.js']
     },
     output: {
         filename: bundle ? 'bundle.js' : '[fullhash].js',
-        path: path.resolve('dist'),
+        path: path.resolve('dist')
     },
     plugins: [
         new HtmlWebpackPlugin({
@@ -41,10 +46,7 @@ export default {
         compress: true,
         port: 3000,
         open: true
-    },
-    optimization: {
-        //concatenateModules: true,
-        //chunkIds: 'total-size',
-        //moduleIds: 'size'
     }
-}
+};
+
+export default config;

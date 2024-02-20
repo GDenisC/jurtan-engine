@@ -23,7 +23,9 @@ export declare abstract class Instance extends ChildrenArray<Instance> {
     onBegin(): void;
     onDestroy(): void;
     onUpdate(): void;
+    onBeforeDraw(): void;
     onDraw(): void;
+    onAfterDraw(): void;
     _update(ctx: CanvasRenderingContext2D): void;
     addModule<T extends Module>(module: T): T;
     translate(x: number, y: number): void;

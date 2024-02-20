@@ -28,7 +28,9 @@ export class Instance extends ChildrenArray {
     onBegin() { }
     onDestroy() { }
     onUpdate() { }
+    onBeforeDraw() { }
     onDraw() { }
+    onAfterDraw() { }
     _update(ctx) {
         const children = [...this.children]; // copy array
         const updateChildren = () => children.sort((a, b) => a.depth - b.depth).forEach(child => child._update(ctx));
@@ -42,7 +44,9 @@ export class Instance extends ChildrenArray {
         }
         if (this.drawChildBottom)
             updateChildren();
+        this.onBeforeDraw();
         this.onDraw();
+        this.onAfterDraw();
         if (!this.drawChildBottom)
             updateChildren();
         ctx.restore();
