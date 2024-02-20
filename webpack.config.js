@@ -17,15 +17,15 @@ const config = {
                 exclude: /node_modules/
             },
             {
-                test: /\.m?js/,
-                type: "javascript/auto",
+                test: /\.js/,
+                type: "javascript/auto"
             },
             {
-                test: /\.m?js/,
+                test: /\.js/,
                 resolve: {
-                    fullySpecified: false,
-                },
-            },
+                    fullySpecified: false
+                }
+            }
         ]
     },
     resolve: {
